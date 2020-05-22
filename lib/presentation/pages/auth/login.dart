@@ -100,7 +100,7 @@ class _LoginState extends State<Login> {
                               fontStyle: FontStyle.normal),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 37),
+                          padding: const EdgeInsets.only(bottom: 10),
                           child: FlatButton(
                               onPressed: () {
                                 _navigateToRegister(context);

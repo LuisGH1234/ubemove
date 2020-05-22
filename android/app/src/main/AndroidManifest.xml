@@ -9,8 +9,8 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="ubermove"
         android:icon="@mipmap/ic_launcher">
-        <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="ae72f9b6b2004b9cbee77e9cd5e58d09"/>
+        <!-- <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="ae72f9b6b2004b9cbee77e9cd5e58d09"/> -->
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ubermove/common/constants/colors.dart';
 import 'package:ubermove/presentation/blocs/auth/auth.bloc.dart';
+import 'package:ubermove/presentation/pages/auth/login.dart';
 import 'package:ubermove/presentation/widgets/widgets.dart';
 
 class Register extends StatefulWidget {
@@ -25,12 +26,17 @@ class _RegisterState extends State<Register> {
     _scaffoldKey.currentState.showSnackBar(snackbar);
   }
 
+  void _navigateToLogin(BuildContext context) {
+    Navigator.of(context).pushNamed(Login.PATH);
+  }
+
   @override
   Widget build(BuildContext context) {
     final authBloc = context.bloc<AuthBloc>();
 
     return Scaffold(
       key: _scaffoldKey,
+      // resizeToAvoidBottomInset: false,
       backgroundColor: $Colors.BACKGROUD,
       body: SafeArea(
         child: KeyboardSafeArea(
@@ -49,13 +55,12 @@ class _RegisterState extends State<Register> {
                 // crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(top: 50),
+                    padding: const EdgeInsets.only(top: 50, bottom: 50),
                     child: Logo(
                       width: 200,
                       // height: 100,
                     ),
                   ),
-                  Spacer(),
                   Input(
                     onChanged: (value) {
                       _username = value;
@@ -106,7 +111,9 @@ class _RegisterState extends State<Register> {
                   ),
                   Center(
                     child: FlatButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          _navigateToLogin(context);
+                        },
                         child: Text(
                           "Iniciar Sesión",
                           style:
