@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ubermove/common/constants/colors.dart';
 import 'package:ubermove/presentation/blocs/auth/auth.bloc.dart';
-import 'package:ubermove/presentation/pages/pages.dart' show Login;
+import 'package:ubermove/presentation/pages/auth/login.dart';
+import 'package:ubermove/presentation/pages/main_page.dart';
 import 'package:ubermove/presentation/routes/routes.dart';
 import 'package:ubermove/common/assets/images.dart' as images;
 
@@ -23,6 +24,7 @@ class App extends StatelessWidget {
       future: precacheImage(AssetImage(images.LOGO), context),
       builder: (context, snapshot) => MaterialApp(
         title: 'Sodexo',
+        themeMode: ThemeMode.dark,
         theme: ThemeData(
           primarySwatch: Colors.blue,
           hintColor: Color(0xffEDF1F7),
@@ -37,20 +39,7 @@ class App extends StatelessWidget {
         home: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             if (state.isAuthenticated)
-              return Scaffold(
-                  body: Center(
-                      child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text("Home Page"),
-                  RaisedButton(
-                    child: Text("Regresar al login"),
-                    onPressed: () {
-                      authBloc.notAuthenticated();
-                    },
-                  )
-                ],
-              )));
+              return MainPage(title: 'Home Page');
             else
               return Login();
           },

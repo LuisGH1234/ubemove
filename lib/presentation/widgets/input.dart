@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../common/constants/colors.dart';
 
 class Input extends Container {
+  final TextInputType keyboardType;
   final double height;
   final String hintText;
   final TextEditingController controller;
@@ -14,6 +15,7 @@ class Input extends Container {
       {this.hintText,
       this.controller,
       this.onChanged,
+      this.keyboardType,
       this.obscureText = false,
       // this.onSaved,
       // this.validator,
@@ -41,6 +43,7 @@ class Input extends Container {
 
   @override
   Widget get child => TextField(
+        keyboardType: keyboardType,
         obscureText: this.obscureText,
         // validator: this.validator,
         // onSaved: this.onSaved,

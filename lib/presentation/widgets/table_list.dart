@@ -58,9 +58,9 @@ class _TableListViewState<T> extends State<TableListView<T>> {
             child: Row(
               // mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                styledHeaderText("Código"),
-                styledHeaderText("Monto"),
-                styledHeaderText("Emisión"),
+                styledHeaderText("Nombre"),
+                styledHeaderText("Fecha"),
+                styledHeaderText("Costo"),
               ],
             ),
           ),
@@ -106,8 +106,8 @@ class _TableListViewState<T> extends State<TableListView<T>> {
                       // mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
                         styledText("0001"),
+                        styledText("10-02-2020"),
                         styledText("s/200"),
-                        styledText("10/02/20"),
                       ],
                     ),
                   ),

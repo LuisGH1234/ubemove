@@ -2,25 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ubermove/common/constants/colors.dart';
 import 'package:ubermove/presentation/blocs/auth/auth.bloc.dart';
-import 'package:ubermove/presentation/pages/auth/register.dart';
 import 'package:ubermove/presentation/widgets/widgets.dart';
 
-class Login extends StatefulWidget {
-  static const PATH = "/login";
+class Register extends StatefulWidget {
+  static const PATH = "/register-form";
 
   @override
-  _LoginState createState() => _LoginState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _LoginState extends State<Login> {
+class _RegisterState extends State<Register> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   String _username = "";
   String _password = "";
-
-  void _navigateToRegister(BuildContext context) {
-    Navigator.of(context).pushNamed(Register.PATH);
-  }
 
   void showSnackbarError(String message) {
     final snackbar = SnackBar(
@@ -49,17 +44,39 @@ class _LoginState extends State<Login> {
               // width: MediaQuery.of(context).size.width,
               // height: MediaQuery.of(context).size.height,
               padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+              child: Flex(
+                direction: Axis.vertical,
+                // crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Spacer(flex: 1),
-                  Logo(width: 250),
-                  Spacer(flex: 1),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 50),
+                    child: Logo(
+                      width: 200,
+                      // height: 100,
+                    ),
+                  ),
+                  Spacer(),
                   Input(
                     onChanged: (value) {
                       _username = value;
                     },
-                    hintText: "Usuario",
+                    hintText: "Nombre",
+                    margin: EdgeInsets.only(bottom: 15),
+                  ),
+                  Input(
+                    onChanged: (value) {
+                      _password = value;
+                    },
+                    obscureText: true,
+                    hintText: "Celular",
+                    margin: EdgeInsets.only(bottom: 15),
+                  ),
+                  Input(
+                    onChanged: (value) {
+                      _password = value;
+                    },
+                    obscureText: true,
+                    hintText: "Email",
                     margin: EdgeInsets.only(bottom: 15),
                   ),
                   Input(
@@ -70,6 +87,15 @@ class _LoginState extends State<Login> {
                     hintText: "Contraseña",
                     margin: EdgeInsets.only(bottom: 15),
                   ),
+                  Input(
+                    onChanged: (value) {
+                      _password = value;
+                    },
+                    obscureText: true,
+                    hintText: "Repetir contraseña",
+                    margin: EdgeInsets.only(bottom: 15),
+                  ),
+                  Spacer(),
                   Button(
                     "INICIAR SESIÓN",
                     loading: state.loginEvent.loading,
@@ -82,37 +108,10 @@ class _LoginState extends State<Login> {
                     child: FlatButton(
                         onPressed: () {},
                         child: Text(
-                          "¿Olvidaste tu contraseña?",
+                          "Iniciar Sesión",
                           style:
                               TextStyle(color: Color(0xffED1C24), fontSize: 12),
                         )),
-                  ),
-                  Spacer(flex: 1),
-                  Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          "¿Deseas afiliarte como comercio?",
-                          style: TextStyle(
-                              color: Color(0xff000000),
-                              fontSize: 14,
-                              fontStyle: FontStyle.normal),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 37),
-                          child: FlatButton(
-                              onPressed: () {
-                                _navigateToRegister(context);
-                              },
-                              child: Text(
-                                "Registrate aqui",
-                                style: TextStyle(
-                                    color: Color(0xffED1C24), fontSize: 12),
-                              )),
-                        ),
-                      ],
-                    ),
                   ),
                 ],
               ),

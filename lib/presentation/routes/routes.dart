@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:ubermove/presentation/pages/pages.dart';
+import 'package:ubermove/presentation/pages/auth/login.dart';
+import 'package:ubermove/presentation/pages/auth/register.dart';
+import 'package:ubermove/presentation/pages/main_page.dart';
 
 Map<String, Widget Function(BuildContext)> routes() {
   return {
     Login.PATH: (ctx) => Login(),
+    Register.PATH: (ctx) => Register(),
+    MainPage.PATH: (ctx) => MainPage(title: 'UberMove'),
   };
 }
 
