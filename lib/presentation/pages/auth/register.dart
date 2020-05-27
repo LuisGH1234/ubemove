@@ -75,14 +75,12 @@ class _RegisterState extends State<Register> {
                   Spacer(),
                   Button(
                     "Registrarse",
-                    loading: state.loginEvent.loading,
                     onPressed: () {
-                       if (_formkey.currentState.validate()) {
-                  // If the form is valid, display a Snackbar.
-                      //  Scaffold.of(context).showSnackBar(SnackBar(content: Text('Processing Data')));
-                      }
-                      authBloc.authenticated();
-                      // authBloc.login(_username, _password);
+                       if (_formkey.currentState.validate()) 
+                        Navigator.of(context).pushNamed('/home_page');
+                      
+                
+
                     },
                   ),
                   Center(
@@ -95,7 +93,6 @@ class _RegisterState extends State<Register> {
                           style:
                               TextStyle(color: Color(0xffED1C24), fontSize: 12),
                         ),
-                        
                         ),
                   ),
                 ],
