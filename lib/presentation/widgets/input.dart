@@ -51,6 +51,17 @@ class Input extends Container {
         // autofocus: false,
         controller: this.controller,
         decoration: InputDecoration(
+          // suffixText: 'bpm',
+          // prefix: Container(
+          //   child: FlatButton(
+          //     padding: EdgeInsets.all(0),
+          //     onPressed: () {},
+          //     child: Text('A'),
+          //     color: Colors.amberAccent,
+          //   ),
+          //   height: 24,
+          //   width: 24,
+          // ),
           hintText: hintText,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(4),
