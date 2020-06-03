@@ -1,48 +1,44 @@
 import 'package:equatable/equatable.dart';
-import 'package:ubermove/domain/core/token.mixin.dart';
 
-class User extends Equatable with Tokenizable {
+class User extends Equatable {
   /// User Id
   final String id;
-  final String username;
-  final String ruc;
-  final String merchant;
-  final String role;
-  final String merchantId;
-  final String localId;
-  final String cashId;
+  final String email;
+  final String firstName;
+  final String lastName;
+  final String active;
+  final String password;
 
   User({
     this.id,
-    this.username,
-    this.ruc,
-    this.merchant,
-    this.role,
-    this.merchantId,
-    this.localId,
-    this.cashId,
+    this.email,
+    this.firstName,
+    this.lastName,
+    this.active,
+    this.password
   })  : assert(id != null),
-        assert(username != null),
-        assert(role != null);
-
+        assert(email != null),
+  
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['usuarioid'],
-      username: json['username'],
-      ruc: json['ruc'],
-      merchant: json['merchant'],
-      role: json['role'],
-      merchantId: json['merchantId'],
-      localId: json['localId'],
-      cashId: json['cajaid'],
-    )
-      ..nbf = json['nbf']
-      ..iat = json['iat']
-      ..aud = json['aud']
-      ..exp = json['exp']
-      ..iss = json['iss'];
+      id: json['id'],
+      email: json['email'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      active: json['active'],
+      password: json['password'],
+      );
   }
 
+  
+   Map<String, dynamic> convertirJson () => 
+    {
+      	"email": email,
+	      "firstName": firstName,
+	      "lastName": lastName,
+	      "password": password,
+    };
+
   @override
-  List<Object> get props => [id, username, ruc, role];
+  List<Object> get props => [id, email, firstName, lastName,active];
 }
