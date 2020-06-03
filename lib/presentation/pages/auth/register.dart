@@ -17,7 +17,8 @@ class _RegisterState extends State<Register> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formkey = GlobalKey<FormState>();
 
-  String _name = "";
+  String _firstname = "";
+  String _lasttname = "";
   String _phone = "";
   String _username = "";
   String _password = "";
@@ -63,8 +64,10 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                   Spacer(),
-                   _setName(),
+                   _setfirstName(),
                   Divider(),
+                  _setlastName(),
+                   Divider(),
                   _setPhone(),
                   Divider(),
                   _setUserName(),
@@ -77,10 +80,10 @@ class _RegisterState extends State<Register> {
                     "Registrarse",
                     onPressed: () {
                        if (_formkey.currentState.validate()) 
-                        Navigator.of(context).pushNamed('/home_page');
-                      
-                
+                       {
 
+                          Navigator.of(context).pushNamed('/home_page');
+                       }
                     },
                   ),
                   Center(
@@ -104,11 +107,11 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  Widget _setName(){
+  Widget _setfirstName(){
      return TextFormField(
          decoration: InputDecoration(
          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
-         hintText: 'Ingrese su nombre completo',
+         hintText: 'Ingrese su primer nombre',
          labelText: 'Nombre',
          labelStyle: TextStyle(color: $Colors.PLACEHOLDER),
          hintStyle: TextStyle(color: $Colors.PLACEHOLDER),
@@ -116,7 +119,7 @@ class _RegisterState extends State<Register> {
        ),
        onChanged: (valor){
          setState(() {
-            _name = valor;
+            _firstname = valor;
          });
        },
        validator: (valor) {
@@ -124,6 +127,31 @@ class _RegisterState extends State<Register> {
             return 'Ha dejado vacio este campo, ingrese su nombre por favor';
         if (valor.length > 50)
           return 'Su nombre tiene que tener menos de 50 caracteres';
+          return null;
+      },
+     ); 
+    }
+
+    Widget _setlastName(){
+     return TextFormField(
+         decoration: InputDecoration(
+         border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
+         hintText: 'Ingrese su primer apellido',
+         labelText: 'Apellido',
+         labelStyle: TextStyle(color: $Colors.PLACEHOLDER),
+         hintStyle: TextStyle(color: $Colors.PLACEHOLDER),
+         icon: Icon(Icons.account_box),
+       ),
+       onChanged: (valor){
+         setState(() {
+            _lasttname = valor;
+         });
+       },
+       validator: (valor) {
+        if (valor.isEmpty) 
+            return 'Ha dejado vacio este campo, ingrese su Apellido por favor';
+        if (valor.length > 50)
+          return 'Su apellido tiene que tener menos de 50 caracteres';
           return null;
       },
      ); 
@@ -237,4 +265,8 @@ class _RegisterState extends State<Register> {
       },
      );
     }
+
+   
 }
+
+
