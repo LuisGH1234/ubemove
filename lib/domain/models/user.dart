@@ -2,11 +2,11 @@ import 'package:equatable/equatable.dart';
 
 class User extends Equatable {
   /// User Id
-  final String id;
+  final int id;
   final String email;
   final String firstName;
   final String lastName;
-  final String active;
+  final bool active;
   final String password;
 
   User({
@@ -16,8 +16,7 @@ class User extends Equatable {
     this.lastName,
     this.active,
     this.password
-  })  : assert(id != null),
-        assert(email != null),
+  })  : assert(email != null);
   
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -29,7 +28,6 @@ class User extends Equatable {
       password: json['password'],
       );
   }
-
   
    Map<String, dynamic> convertirJson () => 
     {

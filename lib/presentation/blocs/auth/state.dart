@@ -5,17 +5,18 @@ import 'events.dart';
 class AuthState extends Equatable {
   final AuthenticateEvent authEvent;
   final LoginEvent loginEvent;
+  final RegistroEvent registroEvent;
 
-  AuthState({this.authEvent, this.loginEvent});
+  AuthState({this.authEvent, this.loginEvent, this.registroEvent});
 
   factory AuthState.init() {
-    return AuthState(authEvent: AuthenticateEvent(), loginEvent: LoginEvent());
+    return AuthState(authEvent: AuthenticateEvent(), loginEvent: LoginEvent(), registroEvent: RegistroEvent());
   }
 
   factory AuthState.from([AuthState state]) {
     if (state != null) {
       return AuthState(
-          authEvent: state.authEvent, loginEvent: state.loginEvent);
+          authEvent: state.authEvent, loginEvent: state.loginEvent,registroEvent: state.registroEvent );
     } else
       return AuthState();
   }

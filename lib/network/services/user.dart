@@ -11,5 +11,5 @@ Future<http.Response> login(String username, String password) {
 
 Future<http.Response> registro(User data) {
   final path = "$USER_PATH/signup";
-  return ApiManager.post(path, body: data, tokenRequired: false);
+  return ApiManager.post(path, body: data.convertirJson(), tokenRequired: false);
 }
