@@ -10,3 +10,4 @@ class AuthenticateEvent with BaseEvent {
 }
 
 class LoginEvent = SinglePayload<String> with BaseEvent;
+class RegistroEvent = SinglePayload<String> with BaseEvent;

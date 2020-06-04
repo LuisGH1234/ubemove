@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:ubermove/common/exceptions/excpetions.dart';
 import 'package:ubermove/domain/core/base.domain.dart';
+import 'package:ubermove/domain/models/user.dart';
 import 'package:ubermove/network/core/api_util.dart';
 import 'package:ubermove/network/services/user.dart' as userServices;
 import 'package:ubermove/repository/auth/auth.behavior.dart';
@@ -36,5 +37,18 @@ class AuthRepository implements IAuthRepository {
   factory AuthRepository.build() {
     // Inject Dependencies
     return AuthRepository._(/* dependencies to be injected */);
+  }
+  
+  Future<User> Registro(User data) async{
+    try {
+      final response = await userServices.registro(data);
+      final body =json.decode(response.body);
+      if(HttpStatus.badRequest == response.statusCode)
+        throw Exception(ErrorResponse.fromJson(body));
+      return body.user;
+    }
+    on SocketException {
+      throw Exception("Error");
+    }
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ubermove/common/constants/colors.dart';
+import 'package:ubermove/domain/models/user.dart';
+import 'package:ubermove/network/services/user.dart';
 import 'package:ubermove/presentation/blocs/auth/auth.bloc.dart';
 import 'package:ubermove/presentation/widgets/widgets.dart';
 
@@ -81,7 +83,8 @@ class _RegisterState extends State<Register> {
                     onPressed: () {
                        if (_formkey.currentState.validate()) 
                        {
-
+                          User data = new User(email: _username,firstName: _firstname,lastName: _lasttname,active: true,password: _password);
+                          registro(data);
                           Navigator.of(context).pushNamed('/home_page');
                        }
                     },
