@@ -4,6 +4,7 @@ import 'package:ubermove/common/constants/colors.dart';
 import 'package:ubermove/domain/models/user.dart';
 import 'package:ubermove/network/services/user.dart';
 import 'package:ubermove/presentation/blocs/auth/auth.bloc.dart';
+import 'package:ubermove/presentation/pages/auth/login.dart';
 import 'package:ubermove/presentation/widgets/widgets.dart';
 
 import '../home/home.dart';
@@ -35,20 +36,27 @@ class _RegisterState extends State<Register> {
     _scaffoldKey.currentState.showSnackBar(snackbar);
   }
 
+  void _navigateToLogin(BuildContext context) {
+    Navigator.of(context).pushNamed(Login.PATH);
+  }
+
   @override
   Widget build(BuildContext context) {
     final authBloc = context.bloc<AuthBloc>();
 
     return Scaffold(
       key: _scaffoldKey,
+      // resizeToAvoidBottomInset: false,
       backgroundColor: $Colors.BACKGROUD,
       body: SafeArea(
         child: BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
           print(state.registroEvent);
           print(state.registroEvent.loading);
           if (state.registroEvent.loading) return;
-          if (state.registroEvent.error) showSnackbarError(state.registroEvent.message);
-          else Navigator.of(context).pushNamed("/");
+          if (state.registroEvent.error)
+            showSnackbarError(state.registroEvent.message);
+          else
+            Navigator.of(context).pushNamed("/");
         }, builder: (context, state) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),

@@ -10,7 +10,7 @@
         android:label="ubermove"
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="ae72f9b6b2004b9cbee77e9cd5e58d09"/>
+               android:value="AIzaSyDcTIRs76fAUpmnOY5g1ntY61Z2ggNa1pA"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
