@@ -1,6 +1,6 @@
-import 'package:equatable/equatable.dart';
+import 'package:ubermove/domain/core/base.domain.dart';
 
-class User extends Equatable {
+class User extends Entity {
   /// User Id
   final int id;
   final String email;
@@ -9,15 +9,15 @@ class User extends Equatable {
   final bool active;
   final String password;
 
-  User({
-    this.id,
-    this.email,
-    this.firstName,
-    this.lastName,
-    this.active,
-    this.password
-  })  : assert(email != null);
-  
+  User(
+      {this.id,
+      this.email,
+      this.firstName,
+      this.lastName,
+      this.active,
+      this.password})
+      : assert(email != null);
+
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],
@@ -26,17 +26,17 @@ class User extends Equatable {
       lastName: json['lastName'],
       active: json['active'],
       password: json['password'],
-      );
+    );
   }
-  
-   Map<String, dynamic> convertirJson () => 
-    {
-      	"email": email,
-	      "firstName": firstName,
-	      "lastName": lastName,
-	      "password": password,
-    };
 
   @override
-  List<Object> get props => [id, email, firstName, lastName,active];
+  Map<String, dynamic> convertirJson() => {
+        "email": email,
+        "firstName": firstName,
+        "lastName": lastName,
+        "password": password,
+      };
+
+  @override
+  List<Object> get props => [id, email, firstName, lastName, active];
 }

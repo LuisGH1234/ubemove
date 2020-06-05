@@ -1,12 +1,12 @@
-import 'package:bloc/bloc.dart';
 import 'package:ubermove/presentation/blocs/auth/state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ubermove/presentation/blocs/core/base_bloc.dart';
 import 'package:ubermove/repository/auth/auth.implemets.dart';
 import './events.dart';
 import '../core/base_events.dart' show BaseEvent;
 import '../../../common/exceptions/excpetions.dart';
 
-class AuthBloc extends Bloc<BaseEvent, AuthState> {
+class AuthBloc extends BaseBloc<AuthState> {
   final AuthRepository repository;
 
   AuthBloc._({this.repository});
@@ -25,22 +25,33 @@ class AuthBloc extends Bloc<BaseEvent, AuthState> {
   }
 
   void login(String username, String password) async {
-    add(LoginEvent()
-      ..loading = true
-      ..error = false);
+    // add(LoginEvent()
+    //   ..loading = true
+    //   ..error = false);
+    // try {
+    //   final data = await repository.login(username, password);
+    //   final prefs = await SharedPreferences.getInstance();
+    //   await prefs.setString('token', data.accessToken);
+    //   add(LoginEvent()
+    //     ..value = data.user
+    //     ..loading = false
+    //     ..error = false);
+    // } on LoginException catch (ex) {
+    //   add(LoginEvent()
+    //     ..message = ex.message
+    //     ..error = true
+    //     ..loading = false);
+    // }
+    addLoading(LoginEvent());
     try {
+      print(username + password);
       final data = await repository.login(username, password);
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('token', data.token);
-      add(LoginEvent()
-        ..value = data.message
-        ..loading = false
-        ..error = false);
-    } on LoginException catch (ex) {
-      add(LoginEvent()
-        ..message = ex.message
-        ..error = true
-        ..loading = false);
+      print("accessToken: " + data.accessToken);
+      await prefs.setString('token', data.accessToken);
+      addSuccess(LoginEvent(value: data.user));
+    } on Exception catch (ex) {
+      addError(LoginEvent(), ex.toString());
     }
   }
 

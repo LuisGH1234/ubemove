@@ -5,9 +5,9 @@ import 'package:ubermove/presentation/pages/main_page.dart';
 
 Map<String, Widget Function(BuildContext)> routes() {
   return {
-    Login.PATH: (ctx) => Login(),
+    // Login.PATH: (ctx) => Login(),
     Register.PATH: (ctx) => Register(),
-    MainPage.PATH: (ctx) => MainPage(title: 'UberMove'),
+    // MainPage.PATH: (ctx) => MainPage(title: 'UberMove'),
   };
 }
 

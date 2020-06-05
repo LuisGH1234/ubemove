@@ -1,5 +1,7 @@
-import 'package:ubermove/domain/core/base.domain.dart';
+import 'package:ubermove/domain/models/auth.dart';
+import 'package:ubermove/domain/models/user.dart';
 
 abstract class IAuthRepository {
-  Future<SuccessLogin> login(String username, String password);
+  Future<AuthEntity> login(String username, String password);
+  Future<AuthEntity> registro(User data);
 }

@@ -28,7 +28,8 @@ class ApiManager {
       {Map<String, dynamic> params, bool tokenRequired = true}) async {
     final uri = Uri.http(AUTHORITY_URI, path, params);
     final headers = await _getHeaders(RequestType.GET, tokenRequired);
-    return http.get(uri, headers: headers);
+    final response = await http.get(uri, headers: headers);
+    return decorateResponse(response);
   }
 
   static Future<http.Response> post(String path,
@@ -37,7 +38,9 @@ class ApiManager {
       bool tokenRequired = true}) async {
     final uri = Uri.http(AUTHORITY_URI, path, params);
     final headers = await _getHeaders(RequestType.POST, tokenRequired);
-    return http.post(uri, headers: headers, body: json.encode(body));
+    final response =
+        await http.post(uri, headers: headers, body: json.encode(body));
+    return decorateResponse(response);
   }
 
   static Future<http.Response> put(String path,
@@ -46,13 +49,41 @@ class ApiManager {
       bool tokenRequired = true}) async {
     final uri = Uri.http(AUTHORITY_URI, path, params);
     final headers = await _getHeaders(RequestType.PUT, tokenRequired);
-    return http.put(uri, headers: headers, body: json.encode(body));
+    final response =
+        await http.put(uri, headers: headers, body: json.encode(body));
+    return decorateResponse(response);
   }
 
   static Future<http.Response> delete(String path,
       {Map<String, dynamic> params, bool tokenRequired = true}) async {
     final uri = Uri.http(AUTHORITY_URI, path, params);
     final headers = await _getHeaders(RequestType.DELETE, tokenRequired);
-    return http.delete(uri, headers: headers);
+    final response = await http.delete(uri, headers: headers);
+    return decorateResponse(response);
+  }
+}
+
+extension PayloadResponse on http.Response {
+  Map<String, dynamic> get payload => json.decode(this.body);
+}
+
+http.Response decorateResponse(http.Response response) {
+  final code = response.statusCode;
+  // final body = json.decode(response.body);
+  final body = response.payload;
+
+  switch (code) {
+    case HttpStatus.internalServerError:
+      throw HttpException('Error interno del servidor');
+    case HttpStatus.unauthorized:
+      throw HttpException(body['message'] as String);
+    case HttpStatus.badRequest:
+      throw HttpException(body['message'] as String);
+    case HttpStatus.notFound:
+      throw HttpException(body['message'] as String);
+    case HttpStatus.forbidden:
+      throw HttpException(body['message'] as String);
+    default:
+      return response;
   }
 }

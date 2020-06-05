@@ -68,6 +68,8 @@ class _HomeState extends State<Home> {
             GoogleMap(
               mapType: MapType.hybrid,
               initialCameraPosition: _kGooglePlex,
+              myLocationButtonEnabled: false,
+              zoomControlsEnabled: false,
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
               },

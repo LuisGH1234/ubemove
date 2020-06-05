@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 class ErrorResponse {
   final String code;
   final bool error;
@@ -26,4 +28,10 @@ class SuccessLogin extends ErrorResponse {
       token: json['message'],
     );
   }
+}
+
+abstract class Entity extends Equatable {
+  const Entity();
+
+  Map<String, dynamic> convertirJson();
 }

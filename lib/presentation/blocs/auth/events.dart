@@ -1,3 +1,5 @@
+import 'package:ubermove/domain/models/user.dart';
+
 import '../core/base_events.dart';
 
 class AuthenticateEvent with BaseEvent {
@@ -9,5 +11,5 @@ class AuthenticateEvent with BaseEvent {
   }
 }
 
-class LoginEvent = SinglePayload<String> with BaseEvent;
-class RegistroEvent = SinglePayload<String> with BaseEvent;
+class LoginEvent = SinglePayload<User> with BaseEvent;
+class RegistroEvent = SinglePayload<User> with BaseEvent;
