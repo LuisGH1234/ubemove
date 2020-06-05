@@ -6,6 +6,8 @@ import 'package:ubermove/presentation/widgets/button.dart';
 import 'package:ubermove/presentation/widgets/date_picker.dart';
 import 'package:ubermove/presentation/widgets/input.dart';
 
+import 'transportDetail.dart';
+
 class Home extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _HomeState();
@@ -15,6 +17,11 @@ class _HomeState extends State<Home> {
   Completer<GoogleMapController> _controller = Completer();
 
   // final LatLng _center = const LatLng(-12.0749822, -77.0449321);
+
+  Future navigateToTransportDetail(context) async {
+    Navigator.pushNamed(context, TransportDetail.PATH);
+    //Navigator.push(context, MaterialPageRoute(builder: (context) => TransportDetail()));
+  }
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
@@ -81,7 +88,9 @@ class _HomeState extends State<Home> {
                   padding: EdgeInsets.only(bottom: 20),
                   child: Button(
                     "CONTINUAR",
-                    onPressed: () {},
+                    onPressed: () {
+                      navigateToTransportDetail(context);
+                    },
                   ),
                 ),
               ),
