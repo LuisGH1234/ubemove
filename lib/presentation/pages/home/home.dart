@@ -32,9 +32,10 @@ class _HomeState extends State<Home> {
       target: LatLng(37.43296265331129, -122.08832357078792),
       tilt: 59.440717697143555,
       zoom: 19.151926040649414);
-  // void _onMapCreated(GoogleMapController controller) {
-  //   mapController = controller;
-  // }
+
+  void _onMapCreated(GoogleMapController controller) {
+     _controller.complete(controller);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,9 +76,7 @@ class _HomeState extends State<Home> {
             GoogleMap(
               mapType: MapType.hybrid,
               initialCameraPosition: _kGooglePlex,
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-              },
+              onMapCreated: _onMapCreated,
             ),
             Positioned(
               bottom: 0,
