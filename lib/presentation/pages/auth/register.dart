@@ -28,9 +28,10 @@ class _RegisterState extends State<Register> {
 
   void showSnackbarError(String message) {
     final snackbar = SnackBar(
-      content: Text(message),
+      content: Text(message ?? 'Error'),
       backgroundColor: $Colors.ACCENT_RED,
     );
+    print('Holi');
     _scaffoldKey.currentState.showSnackBar(snackbar);
   }
 
@@ -43,10 +44,11 @@ class _RegisterState extends State<Register> {
       backgroundColor: $Colors.BACKGROUD,
       body: SafeArea(
         child: BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
-          if (state.loginEvent.loading) return;
-          if (state.loginEvent.error) {
-            showSnackbarError(state.loginEvent.message);
-          }
+          print(state.registroEvent);
+          print(state.registroEvent.loading);
+          if (state.registroEvent.loading) return;
+          if (state.registroEvent.error) showSnackbarError(state.registroEvent.message);
+          else Navigator.of(context).pushNamed("/");
         }, builder: (context, state) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -85,14 +87,14 @@ class _RegisterState extends State<Register> {
                       "Registrarse",
                       onPressed: () {
                         if (_formkey.currentState.validate()) {
+                          print("Hola_Registro");
                           User data = new User(
                               email: _username,
                               firstName: _firstname,
                               lastName: _lasttname,
                               active: true,
                               password: _password);
-                          registro(data);
-                          Navigator.of(context).pushNamed('/home_page');
+                          authBloc.registro(data);
                         }
                       },
                     ),
@@ -181,7 +183,7 @@ class _RegisterState extends State<Register> {
       ),
       onChanged: (valor) {
         setState(() {
-          _username = valor;
+          _phone = valor;
         });
       },
       validator: (valor) {
@@ -207,7 +209,7 @@ class _RegisterState extends State<Register> {
       ),
       onChanged: (valor) {
         setState(() {
-          _phone = valor;
+          _username = valor;
         });
       },
       validator: (valor) {

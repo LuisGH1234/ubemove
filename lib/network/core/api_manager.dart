@@ -69,8 +69,10 @@ extension PayloadResponse on http.Response {
 
 http.Response decorateResponse(http.Response response) {
   final code = response.statusCode;
-  // final body = json.decode(response.body);
+  //final body = json.decode(response.body);
+  print(code);
   final body = response.payload;
+  print(body);
 
   switch (code) {
     case HttpStatus.internalServerError:

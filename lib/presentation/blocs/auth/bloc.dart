@@ -1,3 +1,5 @@
+import 'package:ubermove/domain/models/user.dart';
+import 'package:ubermove/network/services/user.dart';
 import 'package:ubermove/presentation/blocs/auth/state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ubermove/presentation/blocs/core/base_bloc.dart';
@@ -55,6 +57,22 @@ class AuthBloc extends BaseBloc<AuthState> {
     }
   }
 
+  void registro(User dataUser) async{
+    addLoading(RegistroEvent());
+    try {
+      print(dataUser.password);
+      final data = await repository.registro(dataUser);
+      print('Hola1');
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', data.accessToken);
+      addSuccess(RegistroEvent(value: data.user));
+      print('Hola2');
+    } on Exception catch (ex) {
+      addError(RegistroEvent(), ex.toString());
+      print(ex.toString());
+    }
+  }
+
   @override
   AuthState get initialState => AuthState.init();
 
@@ -72,6 +90,10 @@ class AuthBloc extends BaseBloc<AuthState> {
         break;
       case LoginEvent:
         yield AuthState(authEvent: state.authEvent, loginEvent: event)
+          ..isAuthenticated = !event.error && !event.loading;
+        break;
+      case RegistroEvent:
+        yield AuthState(authEvent: state.authEvent, registroEvent: event, loginEvent: state.loginEvent)
           ..isAuthenticated = !event.error && !event.loading;
         break;
       default:

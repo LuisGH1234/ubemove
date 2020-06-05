@@ -25,5 +25,5 @@ class AuthState extends Equatable {
   set isAuthenticated(bool value) => authEvent.isAuthenticated = value;
 
   @override
-  List<Object> get props => [authEvent, loginEvent];
+  List<Object> get props => [authEvent, loginEvent, registroEvent];
 }
