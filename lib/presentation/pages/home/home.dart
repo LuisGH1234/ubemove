@@ -5,7 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ubermove/presentation/widgets/button.dart';
 import 'package:ubermove/presentation/widgets/date_picker.dart';
 import 'package:ubermove/presentation/widgets/input.dart';
-
+import 'package:geolocator/geolocator.dart';
 import 'transportDetail.dart';
 
 class Home extends StatefulWidget {
@@ -15,7 +15,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   Completer<GoogleMapController> _controller = Completer();
-
+  Position _currentPosition;
   // final LatLng _center = const LatLng(-12.0749822, -77.0449321);
 
   Future navigateToTransportDetail(context) async {
@@ -23,7 +23,36 @@ class _HomeState extends State<Home> {
     //Navigator.push(context, MaterialPageRoute(builder: (context) => TransportDetail()));
   }
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
+
+  _getCurrentLocation() {
+    final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+
+    geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) => {
+      setState((){
+        _currentPosition = position;
+      })
+    }).catchError((e){
+      print (e);
+    });
+  }
+
+  CameraPosition setCameraPosition() {
+    _getCurrentLocation();
+
+    _kGooglePlex = CameraPosition(
+      target: LatLng(_currentPosition.latitude, _currentPosition.longitude),
+      zoom: 17.4746,
+    );
+    return _kGooglePlex;
+  }
+
+  Future<GeolocationStatus> checkInternetStatus() async {
+    GeolocationStatus geolocationStatus  = await Geolocator().checkGeolocationPermissionStatus();
+    return geolocationStatus;
+  }
+
+  static CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
@@ -70,12 +99,19 @@ class _HomeState extends State<Home> {
             hintText: "Peso de la carga",
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 15),
+          child: Input(
+            keyboardType: TextInputType.number,
+            hintText: "¿A dónde vas?",
+          ),
+        ),
         Expanded(
             child: Stack(
           children: <Widget>[
             GoogleMap(
               mapType: MapType.normal,
-              initialCameraPosition: _kGooglePlex,
+              initialCameraPosition: setCameraPosition(),
               // myLocationButtonEnabled: false,
               // zoomControlsEnabled: false,
               onMapCreated: (GoogleMapController controller) {

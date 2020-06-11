@@ -4,6 +4,7 @@ import 'package:ubermove/common/constants/colors.dart';
 import 'package:ubermove/presentation/blocs/auth/auth.bloc.dart';
 import 'package:ubermove/presentation/pages/auth/register.dart';
 import 'package:ubermove/presentation/widgets/widgets.dart';
+import 'package:geolocator/geolocator.dart';
 
 class Login extends StatefulWidget {
   static const PATH = "/login";
@@ -28,6 +29,17 @@ class _LoginState extends State<Login> {
       backgroundColor: $Colors.ACCENT_RED,
     );
     _scaffoldKey.currentState.showSnackBar(snackbar);
+  }
+
+  void getPermission() {
+    final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+
+    geolocator.checkGeolocationPermissionStatus()
+        .then((status) => {
+      print(status.toString())
+    }).catchError((e){
+      print(e);
+    });
   }
 
   @override
@@ -55,7 +67,7 @@ class _LoginState extends State<Login> {
               // mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.only(top: 80),
                   child: Logo(width: 250),
                 ),
                 Spacer(),
