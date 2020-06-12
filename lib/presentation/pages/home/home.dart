@@ -131,7 +131,7 @@ class _HomeState extends State<Home> {
         Expanded(
             child: Stack(
           children: <Widget>[
-            FutureBuilder(
+            FutureBuilder<CameraPosition>(
               future: _cameraPositionFurure,
               builder: (constext, snapshot) {
                 if (snapshot.hasData) {
@@ -143,6 +143,11 @@ class _HomeState extends State<Home> {
                     onMapCreated: (GoogleMapController controller) {
                       _controller.complete(controller);
                     },
+                    markers: Set<Marker>.of([
+                      Marker(
+                          markerId: MarkerId("dasss"),
+                          position: snapshot.data.target)
+                    ]),
                     // onMapCreated: _onMapCreated,
                   );
                 } else if (snapshot.hasError) {
