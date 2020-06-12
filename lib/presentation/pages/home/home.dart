@@ -18,7 +18,15 @@ class _HomeState extends State<Home> {
   Completer<GoogleMapController> _controller = Completer();
   Position _currentPosition;
   String _permissionStatus;
+  Future<CameraPosition> _cameraPositionFurure;
   // final LatLng _center = const LatLng(-12.0749822, -77.0449321);
+
+  @override
+  void initState() {
+    super.initState();
+    _cameraPositionFurure = setCameraPosition();
+    // streamController = StreamController.broadcast();
+  }
 
   Future navigateToTransportDetail(context) async {
     Navigator.pushNamed(context, TransportDetail.PATH);
@@ -29,11 +37,11 @@ class _HomeState extends State<Home> {
     // if (await Permission.location.isUndetermined) {
     final Geolocator geolocator = Geolocator()
       ..forceAndroidLocationManager = true;
-    final geolocationStatus = await getPermission(geolocator);
-    print("Per: " + geolocationStatus.toString());
-    if (geolocationStatus.value == GeolocationStatus.denied.value ||
-        geolocationStatus.value == GeolocationStatus.restricted.value)
-      throw Exception("No se aprobó los permisos de localozación");
+    // final geolocationStatus = await getPermission(geolocator);
+    // print("Per: " + geolocationStatus.toString());
+    // if (geolocationStatus.value == GeolocationStatus.denied.value ||
+    //     geolocationStatus.value == GeolocationStatus.restricted.value)
+    //   throw Exception("No se aprobó los permisos de localozación");
 
     print("aaaaa1");
     final position = await geolocator.getCurrentPosition(
@@ -90,7 +98,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    Future<CameraPosition> _cameraPositionFurure = setCameraPosition();
+    // Future<CameraPosition> _cameraPositionFurure = setCameraPosition();
 
     return Flex(
       direction: Axis.vertical,
