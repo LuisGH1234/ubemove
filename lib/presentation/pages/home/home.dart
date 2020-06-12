@@ -27,29 +27,31 @@ class _HomeState extends State<Home> {
 
   Future<Position> _getCurrentLocation() async {
     // if (await Permission.location.isUndetermined) {
-    final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
-    final geolocationStatus = await getPermission();
-
-   /* if (geolocationStatus.value == GeolocationStatus.denied.value ||
+    final Geolocator geolocator = Geolocator()
+      ..forceAndroidLocationManager = true;
+    //final geolocationStatus = await getPermission(geolocator);
+    //print("Per: " + geolocationStatus.toString());
+  /*  if (geolocationStatus.value == GeolocationStatus.denied.value ||
         geolocationStatus.value == GeolocationStatus.restricted.value)
-      throw Exception("No se aprobó los permisos de localozación");
-*/
+      throw Exception("No se aprobó los permisos de localozación");*/
+
+    print("aaaaa1");
     final position = await geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best);
-
+    print("2222");
     // setState(() {
     //   _currentPosition = position;
     // });
-
+    print(position);
     return position;
   }
 
-  Future<GeolocationStatus> getPermission() async {
-    final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+  Future<GeolocationStatus> getPermission(Geolocator geolocator) async {
+    // final Geolocator geolocator = Geolocator()
+    //   ..forceAndroidLocationManager = true;
 
     final status = await geolocator.checkGeolocationPermissionStatus();
-    _permissionStatus = status.toString();
-    print(_permissionStatus);
+    // _permissionStatus = status.toString();
     return status;
   }
 
