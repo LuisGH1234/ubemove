@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:ubermove/presentation/widgets/button.dart';
 import 'package:ubermove/presentation/widgets/date_picker.dart';
 import 'package:ubermove/presentation/widgets/input.dart';
@@ -24,48 +25,50 @@ class _HomeState extends State<Home> {
     //Navigator.push(context, MaterialPageRoute(builder: (context) => TransportDetail()));
   }
 
-
-  _getCurrentLocation() {
+  Future<Position> _getCurrentLocation() async {
+    // if (await Permission.location.isUndetermined) {
     final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
-    getPermission();
-    geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-        .then((Position position) => {
-      setState((){
-        _currentPosition = position;
-      })
-    }).catchError((e){
-      print (e);
-    });
+    final geolocationStatus = await getPermission();
+
+    if (geolocationStatus.value == GeolocationStatus.denied.value ||
+        geolocationStatus.value == GeolocationStatus.restricted.value)
+      throw Exception("No se aprobó los permisos de localozación");
+
+    final position = await geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best);
+
+    // setState(() {
+    //   _currentPosition = position;
+    // });
+
+    return position;
   }
 
-
-  void getPermission() {
+  Future<GeolocationStatus> getPermission() async {
     final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
 
-    geolocator.checkGeolocationPermissionStatus()
-        .then((status) => {
-      _permissionStatus = status.toString(),
-      print(status.toString())
-    }).catchError((e){
-      print(e);
-    });
+    final status = await geolocator.checkGeolocationPermissionStatus();
+    _permissionStatus = status.toString();
+    print(_permissionStatus);
+    return status;
   }
 
-  CameraPosition setCameraPosition() {
-    _getCurrentLocation();
+  Future<CameraPosition> setCameraPosition() async {
+    final myPosition = await _getCurrentLocation();
+    if (myPosition == null) return _kGooglePlex;
 
-    //if(_permissionStatus == "GeolocationStatus.denied") {
-      _kGooglePlex = CameraPosition(
-        target: LatLng(_currentPosition.latitude, _currentPosition.longitude),
-        zoom: 17.4746,
-      );
-    //}
+    _kGooglePlex = CameraPosition(
+      // target: LatLng(_currentPosition.latitude, _currentPosition.longitude),
+      target: LatLng(myPosition.latitude, myPosition.longitude),
+      zoom: 17.4746,
+    );
 
     return _kGooglePlex;
   }
 
   Future<GeolocationStatus> checkInternetStatus() async {
-    GeolocationStatus geolocationStatus  = await Geolocator().checkGeolocationPermissionStatus();
+    GeolocationStatus geolocationStatus =
+        await Geolocator().checkGeolocationPermissionStatus();
     return geolocationStatus;
   }
 
@@ -85,6 +88,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    Future<CameraPosition> _cameraPositionFurure = setCameraPosition();
+
     return Flex(
       direction: Axis.vertical,
       children: <Widget>[
@@ -126,15 +131,28 @@ class _HomeState extends State<Home> {
         Expanded(
             child: Stack(
           children: <Widget>[
-            GoogleMap(
-              mapType: MapType.normal,
-              initialCameraPosition: setCameraPosition(),
-              // myLocationButtonEnabled: false,
-              // zoomControlsEnabled: false,
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
+            FutureBuilder(
+              future: _cameraPositionFurure,
+              builder: (constext, snapshot) {
+                if (snapshot.hasData) {
+                  return GoogleMap(
+                    mapType: MapType.normal,
+                    initialCameraPosition: snapshot.data,
+                    // myLocationButtonEnabled: false,
+                    // zoomControlsEnabled: false,
+                    onMapCreated: (GoogleMapController controller) {
+                      _controller.complete(controller);
+                    },
+                    // onMapCreated: _onMapCreated,
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                        "No se puede mostrar el mapa porque faltan permisos"),
+                  );
+                }
+                return Center(child: CircularProgressIndicator());
               },
-              // onMapCreated: _onMapCreated,
             ),
             Positioned(
               bottom: 0,
