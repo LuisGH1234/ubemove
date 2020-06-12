@@ -30,10 +30,10 @@ class _HomeState extends State<Home> {
     final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
     final geolocationStatus = await getPermission();
 
-    if (geolocationStatus.value == GeolocationStatus.denied.value ||
+   /* if (geolocationStatus.value == GeolocationStatus.denied.value ||
         geolocationStatus.value == GeolocationStatus.restricted.value)
       throw Exception("No se aprobó los permisos de localozación");
-
+*/
     final position = await geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best);
 
