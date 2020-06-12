@@ -31,16 +31,6 @@ class _LoginState extends State<Login> {
     _scaffoldKey.currentState.showSnackBar(snackbar);
   }
 
-  void getPermission() {
-    final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
-
-    geolocator.checkGeolocationPermissionStatus()
-        .then((status) => {
-      print(status.toString())
-    }).catchError((e){
-      print(e);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

@@ -16,6 +16,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   Completer<GoogleMapController> _controller = Completer();
   Position _currentPosition;
+  String _permissionStatus;
   // final LatLng _center = const LatLng(-12.0749822, -77.0449321);
 
   Future navigateToTransportDetail(context) async {
@@ -26,7 +27,7 @@ class _HomeState extends State<Home> {
 
   _getCurrentLocation() {
     final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
-
+    getPermission();
     geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) => {
       setState((){
@@ -37,13 +38,29 @@ class _HomeState extends State<Home> {
     });
   }
 
+
+  void getPermission() {
+    final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+
+    geolocator.checkGeolocationPermissionStatus()
+        .then((status) => {
+      _permissionStatus = status.toString(),
+      print(status.toString())
+    }).catchError((e){
+      print(e);
+    });
+  }
+
   CameraPosition setCameraPosition() {
     _getCurrentLocation();
 
-    _kGooglePlex = CameraPosition(
-      target: LatLng(_currentPosition.latitude, _currentPosition.longitude),
-      zoom: 17.4746,
-    );
+    //if(_permissionStatus == "GeolocationStatus.denied") {
+      _kGooglePlex = CameraPosition(
+        target: LatLng(_currentPosition.latitude, _currentPosition.longitude),
+        zoom: 17.4746,
+      );
+    //}
+
     return _kGooglePlex;
   }
 
