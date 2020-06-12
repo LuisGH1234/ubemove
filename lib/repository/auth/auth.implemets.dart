@@ -15,10 +15,10 @@ class AuthRepository implements IAuthRepository {
   }
 
   Future<AuthEntity> login(String username, String password) async {
-    final response = await userServices.login(username, password);
-    return AuthEntity.fromJson(response.payload);
-    // return AuthEntity(
-    //     accessToken: 'aso', expiresIn: '7d', user: User(email: 'aaa'));
+    // final response = await userServices.login(username, password);
+    // return AuthEntity.fromJson(response.payload);
+    return AuthEntity(
+        accessToken: 'aso', expiresIn: '7d', user: User(email: 'aaa'));
   }
 
   Future<AuthEntity> registro(User data) async {
