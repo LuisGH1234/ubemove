@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:ubermove/presentation/pages/home/specifyDestination.dart';
+import 'package:ubermove/presentation/pages/home/transportDetail.dart';
 import 'package:ubermove/presentation/widgets/button.dart';
 import 'package:ubermove/presentation/widgets/date_picker.dart';
 import 'package:ubermove/presentation/widgets/input.dart';
 import 'package:geolocator/geolocator.dart';
-import 'transportDetail.dart';
+
 
 class Home extends StatefulWidget {
   @override
@@ -28,8 +29,9 @@ class _HomeState extends State<Home> {
     // streamController = StreamController.broadcast();
   }
 
-  Future navigateToTransportDetail(context) async {
-    Navigator.pushNamed(context, TransportDetail.PATH);
+  Future navigateToSpecifyDestination(context) async {
+
+    Navigator.pushNamed(context, SpecifyDestination.PATH, arguments: _kGooglePlex);
     //Navigator.push(context, MaterialPageRoute(builder: (context) => TransportDetail()));
   }
 
@@ -179,7 +181,7 @@ class _HomeState extends State<Home> {
                   child: Button(
                     "CONTINUAR",
                     onPressed: () {
-                      navigateToTransportDetail(context);
+                      navigateToSpecifyDestination(context);
                     },
                   ),
                 ),
