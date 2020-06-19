@@ -133,13 +133,7 @@ class _HomeState extends State<Home> {
             hintText: "Peso de la carga",
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 15),
-          child: Input(
-            keyboardType: TextInputType.number,
-            hintText: "¿A dónde vas?",
-          ),
-        ),
+
         Expanded(
             child: Stack(
           children: <Widget>[
