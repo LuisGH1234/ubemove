@@ -55,13 +55,13 @@ class Profile extends StatelessWidget {
           ),
           SizedBox(height: 30),
           Text(
-            "Celular ${userData.id}",
+            "Email ",
             style: TextStyle(
               fontSize: 14, /*color: $Colors.PRIMARY_TEXT*/
             ),
           ),
           Text(
-            "999666333",
+            "${userData.email}",
             style: TextStyle(
                 fontSize: 20,
                 // color: $Colors.PRIMARY_TEXT,
