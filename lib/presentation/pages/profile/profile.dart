@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ubermove/presentation/blocs/auth/auth.bloc.dart';
+import 'package:ubermove/presentation/pages/profile/profileUpdate.dart';
 import 'package:ubermove/presentation/widgets/button.dart';
 import 'package:ubermove/presentation/widgets/layout.dart';
 
@@ -11,6 +12,10 @@ class Profile extends StatelessWidget {
   //   //     context, MaterialPageRoute(builder: (context) => ValidQuota()));
   // }
 
+  Future navigateToProfileUpdate(context) async {
+    //Navigator.pushNamed(context, ProfileUpdate.PATH);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileUpdate()));
+  }
   @override
   Widget build(BuildContext context) {
     final authBloc = context.bloc<AuthBloc>();
@@ -67,6 +72,10 @@ class Profile extends StatelessWidget {
               // color: $Colors.PRIMARY_TEXT,
               fontWeight: FontWeight.bold),
         ),
+        Spacer(),
+        Button("ACTUALIZAR DATOS", onPressed: () {
+          navigateToProfileUpdate(context);
+        }),
         Spacer(),
         Button("CERRAR SESIÓN", onPressed: () {
           authBloc.notAuthenticated();

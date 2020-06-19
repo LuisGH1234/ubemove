@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ubermove/presentation/pages/auth/register.dart';
 import 'package:ubermove/presentation/pages/home/transportDetail.dart';
+import 'package:ubermove/presentation/pages/profile/profileUpdate.dart';
 
 Map<String, Widget Function(BuildContext)> routes() {
   return {
@@ -8,6 +9,7 @@ Map<String, Widget Function(BuildContext)> routes() {
     Register.PATH: (ctx) => Register(),
     // MainPage.PATH: (ctx) => MainPage(title: 'UberMove'),
     TransportDetail.PATH: (ctx) => TransportDetail(),
+    ProfileUpdate.PATH: (ctx) => ProfileUpdate(),
   };
 }
 
