@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ubermove/common/constants/colors.dart';
+import 'package:ubermove/presentation/pages/home/specifyDestination.dart';
 import 'package:ubermove/presentation/widgets/button.dart';
 import 'package:ubermove/presentation/widgets/date_picker.dart';
 import 'package:ubermove/presentation/widgets/input.dart';
+
+import '../main_page.dart';
 
 class TransportDetail extends StatefulWidget {
   static const PATH = "/transportDetail";
@@ -16,6 +19,12 @@ class TransportDetail extends StatefulWidget {
 
 class _TransportDetailState extends State<TransportDetail> {
   Completer<GoogleMapController> _controller = Completer();
+
+  List _companies =
+  ["Cruz del Sur   30", "Bucuresti   40", "Cruz del Norte   35", "TepSA   29", "Constanta   33"];
+
+  List<DropdownMenuItem<String>> _dropDownMenuItems;
+  String _currentCompany;
 
   // final LatLng _center = const LatLng(-12.0749822, -77.0449321);
 
@@ -30,7 +39,30 @@ class _TransportDetailState extends State<TransportDetail> {
       zoom: 19.151926040649414);
   // void _onMapCreated(GoogleMapController controller) {
   //   mapController = controller;
-  // }
+
+  List<DropdownMenuItem<String>> getDropDownMenuItems() {
+    List<DropdownMenuItem<String>> items = new List();
+    for (String company in _companies) {
+      items.add(new DropdownMenuItem(
+          value: company,
+          child: new Text(company)
+      ));
+    }
+    return items;
+  }
+
+  void changedDropDownItem(String selectedCompany) {
+    setState(() {
+      _currentCompany = selectedCompany;
+    });
+  }
+
+  @override
+  void initState() {
+    _dropDownMenuItems = getDropDownMenuItems();
+    _currentCompany = _dropDownMenuItems[0].value;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,10 +112,11 @@ class _TransportDetailState extends State<TransportDetail> {
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 15),
-                child: Input(
-                  keyboardType: TextInputType.number,
-                  hintText: "Conductor #147",
-                ),
+                child: DropdownButton(
+                  value: _currentCompany,
+                  items: _dropDownMenuItems,
+                  onChanged: changedDropDownItem,
+                )
               ),
               Expanded(
                 child: Stack(
@@ -105,7 +138,9 @@ class _TransportDetailState extends State<TransportDetail> {
                               left: 30, bottom: 20), //.only(bottom: 20),
                           child: Button(
                             "CONTINUAR",
-                            onPressed: () {},
+                            onPressed: () {
+                              //Navigator.popUntil(context, ModalRoute.withName(MainPage.PATH));
+                            },
                           ),
                         ),
                       ),
