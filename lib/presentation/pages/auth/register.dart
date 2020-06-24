@@ -58,67 +58,68 @@ class _RegisterState extends State<Register> {
           else
             Navigator.of(context).pushNamed("/");
         }, builder: (context, state) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Form(
-              key: _formkey,
-              // width: MediaQuery.of(context).size.width,
-              // height: MediaQuery.of(context).size.height,
-              //padding: EdgeInsets.symmetric(horizontal: 20),
-              child: SingleChildScrollView(
-                child: Column(
-                  // direction: Axis.vertical,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 50, bottom: 50),
-                      child: Logo(
-                        width: 200,
-                        // height: 100,
+          return GestureDetector(
+            onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
+            behavior: HitTestBehavior.translucent,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Form(
+                key: _formkey,
+                // width: MediaQuery.of(context).size.width,
+                // height: MediaQuery.of(context).size.height,
+                //padding: EdgeInsets.symmetric(horizontal: 20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    // direction: Axis.vertical,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      AspectRatio(
+                        aspectRatio: 8 / 4,
+                        child: Logo(width: 250),
                       ),
-                    ),
-                    // Spacer(),
-                    _setfirstName(),
-                    Divider(),
-                    _setlastName(),
-                    Divider(),
-                    _setPhone(),
-                    Divider(),
-                    _setUserName(),
-                    Divider(),
-                    _setPassword(),
-                    Divider(),
-                    _setRepeatPassword(),
-                    // Spacer(),
-                    SizedBox(height: 40),
-                    Button(
-                      "Registrarse",
-                      onPressed: () {
-                        if (_formkey.currentState.validate()) {
-                          print("Hola_Registro");
-                          User data = new User(
-                              email: _username,
-                              firstName: _firstname,
-                              lastName: _lasttname,
-                              active: true,
-                              password: _password);
-                          authBloc.registro(data);
-                        }
-                      },
-                    ),
-                    Center(
-                      child: FlatButton(
+                      // Spacer(),
+                      _setfirstName(),
+                      Divider(),
+                      _setlastName(),
+                      Divider(),
+                      _setPhone(),
+                      Divider(),
+                      _setUserName(),
+                      Divider(),
+                      _setPassword(),
+                      Divider(),
+                      _setRepeatPassword(),
+                      // Spacer(),
+                      SizedBox(height: 40),
+                      Button(
+                        "Registrarse",
                         onPressed: () {
-                          Navigator.of(context).pushNamed("/");
+                          if (_formkey.currentState.validate()) {
+                            print("Hola_Registro");
+                            User data = new User(
+                                email: _username,
+                                firstName: _firstname,
+                                lastName: _lasttname,
+                                active: true,
+                                password: _password);
+                            authBloc.registro(data);
+                          }
                         },
-                        child: Text(
-                          "Iniciar Sesión",
-                          style:
-                              TextStyle(color: Color(0xffED1C24), fontSize: 12),
+                      ),
+                      Center(
+                        child: FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).pushNamed("/");
+                          },
+                          child: Text(
+                            "Iniciar Sesión",
+                            style: TextStyle(
+                                color: Color(0xffED1C24), fontSize: 12),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
