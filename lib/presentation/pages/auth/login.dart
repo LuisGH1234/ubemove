@@ -40,19 +40,20 @@ class _LoginState extends State<Login> {
       // resizeToAvoidBottomInset: false,
       backgroundColor: $Colors.BACKGROUD,
       body: SafeArea(
-        child: BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
-          if (state.loginEvent.loading) return;
-          if (state.loginEvent.error) {
-            showSnackbarError(state.loginEvent.message);
-          }
-        }, builder: (context, state) {
-          return SingleChildScrollView(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height -
-                  MediaQuery.of(context).padding.top,
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
+        child: SingleChildScrollView(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height -
+                MediaQuery.of(context).padding.top,
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: BlocConsumer<AuthBloc, AuthState>(
+              listener: (context, state) {
+                if (state.loginEvent.loading) return;
+                if (state.loginEvent.error) {
+                  showSnackbarError(state.loginEvent.message);
+                }
+              },
+              builder: (context, state) => Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 // mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -135,8 +136,8 @@ class _LoginState extends State<Login> {
                 ],
               ),
             ),
-          );
-        }),
+          ),
+        ),
       ),
     );
   }
