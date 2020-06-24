@@ -1,7 +1,6 @@
 import 'package:ubermove/domain/models/auth.dart';
 
 import '../../network/core/api_manager.dart';
-import 'package:ubermove/domain/core/base.domain.dart';
 import 'package:ubermove/domain/models/user.dart';
 import 'package:ubermove/network/services/user.dart' as userServices;
 import 'package:ubermove/repository/auth/auth.behavior.dart';
