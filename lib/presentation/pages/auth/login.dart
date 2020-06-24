@@ -31,7 +31,6 @@ class _LoginState extends State<Login> {
     _scaffoldKey.currentState.showSnackBar(snackbar);
   }
 
-
   @override
   Widget build(BuildContext context) {
     final authBloc = context.bloc<AuthBloc>();
@@ -81,7 +80,17 @@ class _LoginState extends State<Login> {
                   loading: state.loginEvent.loading,
                   onPressed: () {
                     // authBloc.authenticated();
-                    authBloc.login(_username, _password);
+                    bool isEmail = RegExp(
+                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                        .hasMatch(_username);
+                    bool emptyField = _username.isEmpty || _password.isEmpty;
+                    if (isEmail && !emptyField) {
+                      // authBloc.authenticated();
+                      authBloc.login(_username, _password);
+                    } else if (emptyField)
+                      showSnackbarError("Debe llenar los campos");
+                    else
+                      showSnackbarError("El correo no es válido");
                   },
                 ),
                 Center(
