@@ -20,6 +20,8 @@ class TransportDetail extends StatefulWidget {
 class _TransportDetailState extends State<TransportDetail> {
   Completer<GoogleMapController> _controller = Completer();
 
+
+
   List _companies =
   ["Cruz del Sur   30", "Bucuresti   40", "Cruz del Norte   35", "TepSA   29", "Constanta   33"];
 
@@ -66,6 +68,8 @@ class _TransportDetailState extends State<TransportDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final  Map<String, Object> arguments = ModalRoute.of(context).settings.arguments;
+    print(arguments);
     return Scaffold(
       appBar: AppBar(title: Text('Transporte')),
       backgroundColor: $Colors.BACKGROUD,
