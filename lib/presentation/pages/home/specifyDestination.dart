@@ -19,14 +19,14 @@ class SpecifyDestination extends StatefulWidget {
 
 class _SpecifyDestinationState extends State<SpecifyDestination> {
   Completer<GoogleMapController> _controller = Completer();
-  static const kGoogleApiKey = "AIzaSyC7UgtaZmkYji_zhlKK_7EsI5v-EluJWzc";
+  static const kGoogleApiKey = "AIzaSyDYGiwEMi6u7dvyWQKMZ4j7kyqJVq7h4zs";
   GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 
   Future navigateToTransportDetail(context) async {
     Navigator.pushNamed(context, TransportDetail.PATH);
   }
 
-  Future<Null> displayPrediction(Prediction p) async {
+  /*Future<Null> displayPrediction(Prediction p) async {
     if (p != null) {
       PlacesDetailsResponse detail =
       await _places.getDetailsByPlaceId(p.placeId);
@@ -54,6 +54,20 @@ class _SpecifyDestinationState extends State<SpecifyDestination> {
       var address = await Geocoder.local.findAddressesFromQuery(p.description);
 
       return Position(latitude: lat, longitude: lng);
+      print(lat);
+      print(lng);
+    }
+  }*/
+
+  Future<String> displayPrediction(Prediction p) async {
+    if (p != null) {
+      PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId);
+
+      var placeId = p.placeId;
+      double lat = detail.result.geometry.location.lat;
+      double lng = detail.result.geometry.location.lng;
+
+      var address = await Geocoder.local.findAddressesFromQuery(p.description);
       print(lat);
       print(lng);
     }
@@ -133,24 +147,31 @@ class _SpecifyDestinationState extends State<SpecifyDestination> {
               }
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 15, top: 15),
-              child: Input(
-                keyboardType: TextInputType.text,
-                hintText: "¿A dónde vas?",
-              ),
+                padding: const EdgeInsets.only(bottom: 15, top: 15),
+                child: TextField(
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      border: new OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(10),
+                        ),
+                      ),
+                      suffixIcon: IconButton(
+                        //search icon
+                        splashColor: Colors.grey,
+                        icon: Icon(
+                          Icons.search,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () async {
+                          Prediction p = await PlacesAutocomplete.show(
+                              context: context, apiKey: kGoogleApiKey);
+                          displayPrediction(p);
+                        },
+                      ),
+                    )
+                )
             ),
-
-            Container(
-                alignment: Alignment.center,
-                child: RaisedButton(
-                  onPressed: () async {
-                    // show input autocomplete with selected mode
-                    // then get the Prediction selected
-
-                    displayPrediction(await getPrediction());
-                  },
-                  child: Text('Find address'),
-                )),
             Expanded(
                 child: Stack(
                   children: <Widget>[
