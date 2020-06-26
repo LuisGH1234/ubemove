@@ -20,7 +20,7 @@ class UserBloc extends BaseBloc<UserState> {
     addLoading(PaymentMethodListEvent());
     try {
       final data = await repository.getMyPaymentMethods();
-      addSuccess(PaymentMethodListEvent(data: data));
+      addSuccess(PaymentMethodListEvent(data: data ?? []));
     } on Exception catch (ex) {
       addError(PaymentMethodListEvent(), ex.toString());
     }
