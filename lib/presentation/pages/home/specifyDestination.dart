@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ubermove/common/constants/colors.dart';
@@ -22,107 +23,27 @@ class _SpecifyDestinationState extends State<SpecifyDestination> {
   static const kGoogleApiKey = "AIzaSyDYGiwEMi6u7dvyWQKMZ4j7kyqJVq7h4zs";
   GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 
-  Future navigateToTransportDetail(context) async {
-    Navigator.pushNamed(context, TransportDetail.PATH);
+  Future navigateToTransportDetail(context, originPoint, destinationPoint, originAddress, destinationAddress) async {
+    Navigator.pushNamed(context, TransportDetail.PATH,
+        arguments: {"originPoint": originPoint, "destinationPoint": destinationPoint, "originAddress": originAddress, "destinationAddress": destinationAddress });
   }
 
-  /*Future<Null> displayPrediction(Prediction p) async {
-    if (p != null) {
-      PlacesDetailsResponse detail =
-      await _places.getDetailsByPlaceId(p.placeId);
-
-      var placeId = p.placeId;
-      double lat = detail.result.geometry.location.lat;
-      double lng = detail.result.geometry.location.lng;
-
-      var address = await Geocoder.local.findAddressesFromQuery(p.description);
-
-      print(lat);
-      print(lng);
-    }
-  }
-
-  Future<Position> displayPredictionAndGetPlace(Prediction p) async {
-    if (p != null) {
-      PlacesDetailsResponse detail =
-      await _places.getDetailsByPlaceId(p.placeId);
-
-      var placeId = p.placeId;
-      double lat = detail.result.geometry.location.lat;
-      double lng = detail.result.geometry.location.lng;
-
-      var address = await Geocoder.local.findAddressesFromQuery(p.description);
-
-      return Position(latitude: lat, longitude: lng);
-      print(lat);
-      print(lng);
-    }
-  }*/
-
-  Future<String> displayPrediction(Prediction p) async {
-    if (p != null) {
-      PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId);
-
-      var placeId = p.placeId;
-      double lat = detail.result.geometry.location.lat;
-      double lng = detail.result.geometry.location.lng;
-
-      var address = await Geocoder.local.findAddressesFromQuery(p.description);
-      print(lat);
-      print(lng);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     CameraPosition origin = ModalRoute.of(context).settings.arguments;
-
-    Future<List<CameraPosition>> getCameraView (String address) async {
-      List<Placemark> placemark = await Geolocator().placemarkFromAddress(address);
-      CameraPosition destinationPosition = CameraPosition(
-        target: LatLng(placemark[0].position.latitude, placemark[0].position.longitude),
-      );
-
-      return [origin, destinationPosition];
-    }
-
-    Future<Prediction> getPrediction() async {
-      Prediction p = await PlacesAutocomplete.show(
-          context: context, apiKey: kGoogleApiKey);
-      return p;
-    }
-
-    Future<Position> getPosition() async {
-      Prediction p = await getPrediction();
-      if (p != null) {
-        PlacesDetailsResponse detail =
-        await _places.getDetailsByPlaceId(p.placeId);
-
-        var placeId = p.placeId;
-        double lat = detail.result.geometry.location.lat;
-        double lng = detail.result.geometry.location.lng;
-
-        var address = await Geocoder.local.findAddressesFromQuery(p.description);
-        return Position(latitude: lat,longitude: lng);
-      }
-    }
-
-    Future<List<CameraPosition>> getMiddleCameraView (String address) async {
-      List<Placemark> placemark = await Geolocator().placemarkFromAddress(address);
-      CameraPosition destinationPosition = CameraPosition(
-        target: LatLng(placemark[0].position.latitude, placemark[0].position.longitude),
-      );
-      CameraPosition middleCameraPosition = CameraPosition(
-          target: LatLng((origin.target.latitude + destinationPosition.target.latitude)/2, (origin.target.longitude+destinationPosition.target.longitude)/2),
-          zoom: 4
-      );
-      return [middleCameraPosition, origin, destinationPosition];
-    }
-
-    Future<String> getAddress() async {
-      List<Placemark> placemark = await Geolocator().placemarkFromCoordinates(origin.target.latitude, origin.target.longitude);
-      print(placemark[0].name.toString());
+    LatLng originPoint = LatLng(origin.target.latitude, origin.target.longitude);
+    String originAddress;
+    LatLng destinationPoint;
+    String destinationAddress;
+    Future<String> getAddressFromCoordinates() async {
+      List<Placemark> placemark = await Geolocator().placemarkFromCoordinates(originPoint.latitude, originPoint.longitude);
       return placemark[0].thoroughfare + " " + placemark[0].name;
+    }
+
+    Future<LatLng> getLatLngFromAddress(String address) async {
+      List<Placemark> placemark = await Geolocator().placemarkFromAddress(address);
+      return LatLng(placemark[0].position.latitude, placemark[0].position.longitude);
     }
 
     return Scaffold(
@@ -131,97 +52,38 @@ class _SpecifyDestinationState extends State<SpecifyDestination> {
         body: Flex(
           direction: Axis.vertical,
           children: <Widget>[
-            FutureBuilder<String>(
-              future: getAddress(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Input(
-                    keyboardType: TextInputType.text,
-                    hintText: snapshot.data,
-                  );
-                }
-                return Input(
-                  keyboardType: TextInputType.text,
-                  hintText: "Dirección de origen",
-                );
-              }
-            ),
-            Padding(
-                padding: const EdgeInsets.only(bottom: 15, top: 15),
-                child: TextField(
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      border: new OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(
-                          const Radius.circular(10),
-                        ),
-                      ),
-                      suffixIcon: IconButton(
-                        //search icon
-                        splashColor: Colors.grey,
-                        icon: Icon(
-                          Icons.search,
-                          color: Colors.grey,
-                        ),
-                        onPressed: () async {
-                          Prediction p = await PlacesAutocomplete.show(
-                              context: context, apiKey: kGoogleApiKey);
-                          displayPrediction(p);
-                        },
-                      ),
-                    )
-                )
-            ),
             Expanded(
                 child: Stack(
                   children: <Widget>[
-                    FutureBuilder<List<CameraPosition>>(
-                      future: getMiddleCameraView("Rio de Janeiro 391"),
-                      builder: (constext, snapshot) {
-                        if (snapshot.hasData) {
-                          return GoogleMap(
-                            mapType: MapType.normal,
-                            initialCameraPosition: snapshot.data[0],
-                            // myLocationButtonEnabled: false,
-                            // zoomControlsEnabled: false,
-                            onMapCreated: (GoogleMapController controller) {
-                              _controller.complete(controller);
-                            },
-                            markers: Set<Marker>.of([
-                              Marker(
-                                  markerId: MarkerId("dasss"),
-                                  position: snapshot.data[1].target),
-                              Marker(
-                                  markerId: MarkerId("sssad"),
-                                  position: snapshot.data[2].target)
-                            ]),
-                            // onMapCreated: _onMapCreated,
-                          );
-                        } else if (snapshot.hasError) {
-                          return Center(
-                            child: Text(
-                                "No se puede mostrar el mapa porque faltan permisos"),
-                          );
-                        }
-                        return Center(child: CircularProgressIndicator());
+
+                    PlacePicker(
+                      apiKey: kGoogleApiKey,   // Put YOUR OWN KEY here.
+                      onPlacePicked: (result) async {
+                        originAddress = await getAddressFromCoordinates();
+                        destinationAddress = result.formattedAddress;
+                        destinationPoint = await getLatLngFromAddress(destinationAddress);
+                        print(originAddress);
+                        print(destinationAddress);
+                        navigateToTransportDetail(context, originPoint, destinationPoint, originAddress, destinationAddress);
+                        //Navigator.of(context).pop();
                       },
+                      /*selectedPlaceWidgetBuilder: (_, selectedPlace, state, isSearchBarFocused) {
+                        return isSearchBarFocused
+                            ? Container()
+                        // Use FloatingCard or just create your own Widget.
+                            : FloatingCard(
+                          bottomPosition: MediaQuery.of(context).size.height * 0.05,
+                          leftPosition: MediaQuery.of(context).size.width * 0.05,
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          borderRadius: BorderRadius.circular(12.0),
+                          child: state == SearchingState.Searching ?
+                          Center(child: CircularProgressIndicator()) :
+                          RaisedButton(onPressed: () { print("do something with [selectedPlace] data"); },),
+                        );
+                      },*/
+                      initialPosition: LatLng(origin.target.latitude, origin.target.longitude),
+                      useCurrentLocation: true,
                     ),
-                    Positioned(
-                      bottom: 0,
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(
-                        child: Container(
-                          width: 200,
-                          padding: EdgeInsets.only(bottom: 20),
-                          child: Button(
-                            "CONTINUAR",
-                            onPressed: () {
-                              navigateToTransportDetail(context);
-                            },
-                          ),
-                        ),
-                      ),
-                    )
                   ],
                 )),
             SizedBox(height: 20)

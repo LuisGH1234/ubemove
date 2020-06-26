@@ -26,6 +26,16 @@ class UserBloc extends BaseBloc<UserState> {
     }
   }
 
+  void getMyCompanies() async {
+    addLoading(CompanyListEvent());
+    try {
+      final data = await repository.getMyCompanies();
+      addSuccess(CompanyListEvent(data: data ?? []));
+    } on Exception catch (ex) {
+      addError(CompanyListEvent(), ex.toString());
+    }
+  }
+
   @override
   UserState get initialState => UserState.init();
 
@@ -33,7 +43,10 @@ class UserBloc extends BaseBloc<UserState> {
   Stream<UserState> mapEventToState(BaseEvent event) async* {
     switch (event.runtimeType) {
       case PaymentMethodListEvent:
-        yield UserState(paymentMethodList: event);
+        yield UserState(paymentMethodList: event, companyListEvent: state.companyListEvent);
+        break;
+      case CompanyListEvent:
+        yield UserState(paymentMethodList: state.paymentMethodList, companyListEvent: event);
         break;
       default:
         print("UserBloc: mapEventToState default on switch statement");
@@ -41,4 +54,6 @@ class UserBloc extends BaseBloc<UserState> {
         break;
     }
   }
+
+
 }
