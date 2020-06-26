@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ubermove/common/constants/colors.dart';
+import 'package:ubermove/presentation/pages/home/paymentMethod.dart';
 import 'package:ubermove/presentation/pages/home/specifyDestination.dart';
 import 'package:ubermove/presentation/widgets/button.dart';
 import 'package:ubermove/presentation/widgets/date_picker.dart';
@@ -20,8 +21,13 @@ class TransportDetail extends StatefulWidget {
 class _TransportDetailState extends State<TransportDetail> {
   Completer<GoogleMapController> _controller = Completer();
 
-  List _companies =
-  ["Cruz del Sur   30", "Bucuresti   40", "Cruz del Norte   35", "TepSA   29", "Constanta   33"];
+  List _companies = [
+    "Cruz del Sur   30",
+    "Bucuresti   40",
+    "Cruz del Norte   35",
+    "TepSA   29",
+    "Constanta   33"
+  ];
 
   List<DropdownMenuItem<String>> _dropDownMenuItems;
   String _currentCompany;
@@ -43,10 +49,7 @@ class _TransportDetailState extends State<TransportDetail> {
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
     List<DropdownMenuItem<String>> items = new List();
     for (String company in _companies) {
-      items.add(new DropdownMenuItem(
-          value: company,
-          child: new Text(company)
-      ));
+      items.add(new DropdownMenuItem(value: company, child: new Text(company)));
     }
     return items;
   }
@@ -111,13 +114,12 @@ class _TransportDetailState extends State<TransportDetail> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 15),
-                child: DropdownButton(
-                  value: _currentCompany,
-                  items: _dropDownMenuItems,
-                  onChanged: changedDropDownItem,
-                )
-              ),
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: DropdownButton(
+                    value: _currentCompany,
+                    items: _dropDownMenuItems,
+                    onChanged: changedDropDownItem,
+                  )),
               Expanded(
                 child: Stack(
                   children: <Widget>[
@@ -139,6 +141,8 @@ class _TransportDetailState extends State<TransportDetail> {
                           child: Button(
                             "CONTINUAR",
                             onPressed: () {
+                              Navigator.of(context)
+                                  .pushNamed(PaymentTMethodList.PATH);
                               //Navigator.popUntil(context, ModalRoute.withName(MainPage.PATH));
                             },
                           ),

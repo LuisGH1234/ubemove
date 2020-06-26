@@ -19,35 +19,16 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndexBar = Bar.Home;
+  final allDestinations = <Widget>[Home(), History(), Profile()];
 
-// PageStorage
-// https://www.youtube.com/watch?v=EyLqj9L_Tck
   Widget _setBody(BuildContext context, GlobalKey<ScaffoldState> scaffoldKey) {
-    switch (_selectedIndexBar) {
-      case Bar.Home:
-        return Home();
-      case Bar.History:
-        return History();
-      case Bar.Profile:
-        return Profile();
-      default:
-        return Text("Error Page");
-    }
+    return IndexedStack(
+      children: allDestinations,
+      index: _selectedIndexBar,
+    );
   }
 
   CupertinoTabBar _bottomNavBar() {
-    // BottomAppBar(
-    //     shape: CircularNotchedRectangle(),
-    //     color: Colors.blueGrey,
-    //     notchMargin: 2.0,
-    //     clipBehavior: Clip.antiAlias,
-    //     child: BottomNavigationBar(items: [
-    //       BottomNavigationBarItem(
-    //           icon: Icon(Icons.cancel), title: Text("Title")),
-    //       BottomNavigationBarItem(
-    //           icon: Icon(Icons.cancel), title: Text("Title")),
-    //     ]),
-    //   )
     return CupertinoTabBar(
       iconSize: 20.0,
       items: [
