@@ -5,7 +5,7 @@ import 'package:ubermove/common/constants/api_urls.dart' show AUTH_PATH;
 
 Future<http.Response> login(String username, String password) {
   final path = "$AUTH_PATH/login";
-  final data = {'username': username, 'password': password};
+  final data = {'email': username, 'password': password};
   return ApiManager.post(path, body: data, tokenRequired: false);
 }
 

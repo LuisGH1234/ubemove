@@ -4,6 +4,7 @@ import 'package:ubermove/common/constants/colors.dart';
 import 'package:ubermove/presentation/blocs/auth/auth.bloc.dart';
 import 'package:ubermove/presentation/pages/auth/register.dart';
 import 'package:ubermove/presentation/widgets/widgets.dart';
+import 'package:geolocator/geolocator.dart';
 
 class Login extends StatefulWidget {
   static const PATH = "/login";
@@ -30,6 +31,7 @@ class _LoginState extends State<Login> {
     _scaffoldKey.currentState.showSnackBar(snackbar);
   }
 
+
   @override
   Widget build(BuildContext context) {
     final authBloc = context.bloc<AuthBloc>();
@@ -55,7 +57,7 @@ class _LoginState extends State<Login> {
               // mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.only(top: 80),
                   child: Logo(width: 250),
                 ),
                 Spacer(),

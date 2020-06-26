@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:ubermove/domain/models/user.dart';
 import 'package:ubermove/network/services/user.dart';
 import 'package:ubermove/presentation/blocs/auth/state.dart';
@@ -51,6 +53,7 @@ class AuthBloc extends BaseBloc<AuthState> {
       final prefs = await SharedPreferences.getInstance();
       print("accessToken: " + data.accessToken);
       await prefs.setString('token', data.accessToken);
+      await prefs.setString('user',json.encode(data.user.convertirJson()) );
       addSuccess(LoginEvent(value: data.user));
     } on Exception catch (ex) {
       addError(LoginEvent(), ex.toString());
@@ -62,11 +65,10 @@ class AuthBloc extends BaseBloc<AuthState> {
     try {
       print(dataUser.password);
       final data = await repository.registro(dataUser);
-      print('Hola1');
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', data.accessToken);
       addSuccess(RegistroEvent(value: data.user));
-      print('Hola2');
+      print('Print Registro');
     } on Exception catch (ex) {
       addError(RegistroEvent(), ex.toString());
       print(ex.toString());
