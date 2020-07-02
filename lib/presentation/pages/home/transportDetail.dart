@@ -153,7 +153,6 @@ class _TransportDetailState extends State<TransportDetail> {
                                 onPressed: () {
                                   Navigator.of(context)
                                       .pushNamed(PaymentTMethodList.PATH);
-                                  //Navigator.popUntil(context, ModalRoute.withName(MainPage.PATH));
                                 },
                               ),
                             ),

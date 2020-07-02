@@ -73,7 +73,9 @@ class _PaymentTMethodListState extends State<PaymentTMethodList> {
                       }).toList(),
                     ),
                   ),
-                  Button("Continuar", onPressed: () {}),
+                  Button("Continuar", onPressed: () {
+                    Navigator.popUntil(context, ModalRoute.withName('/'));
+                  }),
                 ],
               );
             },
