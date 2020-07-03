@@ -1,5 +1,6 @@
 import 'package:ubermove/domain/core/base.domain.dart';
 import 'package:ubermove/domain/models/company.dart';
+import 'package:ubermove/domain/models/payment.dart';
 import 'package:ubermove/domain/models/paymentMethodClient.dart';
 import 'package:ubermove/domain/models/user.dart';
 
@@ -15,6 +16,7 @@ class Job extends Entity {
   final num destinyLatitude;
   final num destinyLongitude;
   final int status;
+  final Payment payment;
   final int totalPrice;
   final PaymentMethodClient paymentMethodClient;
   final Company company;
@@ -32,6 +34,7 @@ class Job extends Entity {
       this.destinyLatitude,
       this.destinyLongitude,
       this.status,
+      this.payment,
       this.totalPrice,
       this.paymentMethodClient,
       this.company,
@@ -42,7 +45,7 @@ class Job extends Entity {
       id: json['id'],
       active: json['active'],
       weight: json['weight'],
-      date: json['date'],
+      date: DateTime.parse(json['date']),
       originAddress: json['originAddress'],
       destinyAddress: json['destinyAddress'],
       originLatitude: json['originLatitude'],
@@ -51,13 +54,15 @@ class Job extends Entity {
       destinyLatitude: json['destinyLatitude'],
       destinyLongitude: json['destinyLongitude'],
       status: json['status'],
+      payment: Payment.fromJson(json['payment']),
+      company: Company.fromJson(json['company']),
     );
   }
 
   @override
   Map<String, dynamic> convertirJson() => {
         'weight': weight,
-        'date': date.toString(),
+        'date': date,
         'originAddress': originAddress,
         'destinyAddress': destinyAddress,
         'originLatitude': originLatitude,
@@ -65,6 +70,7 @@ class Job extends Entity {
         'destinyLatitude': destinyLatitude,
         'destinyLongitude': destinyLongitude,
         'status': status,
+        'payment': payment.convertirJson(),
         'totalPrice': totalPrice,
         'paymentMethodClient': paymentMethodClient.convertirJson(),
         'company': company.convertirJson(),

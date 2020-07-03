@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:ubermove/domain/models/job.dart';
 
 class TableListView<T> extends StatefulWidget {
   final List<T> data;
+  final bool loading;
   final EdgeInsetsGeometry margin;
+  final Future<void> Function() onRefresh;
 
-  TableListView({@required this.data, this.margin});
+  TableListView(
+      {@required this.data, this.margin, this.onRefresh, this.loading = false});
 
   @override
   _TableListViewState createState() => _TableListViewState();
@@ -64,31 +69,46 @@ class _TableListViewState<T> extends State<TableListView<T>> {
               ],
             ),
           ),
-          Flexible(
-            child: ListView.builder(
-              padding: EdgeInsets.all(0),
-              itemCount: widget.data.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  child: Container(
-                    color: index != indexPressed
-                        ? Color(0xffEDF1F7)
-                        : Color(0xffD7E2F1),
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 17),
-                    child: Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        styledText("0001"),
-                        styledText("10-02-2020"),
-                        styledText("s/200"),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
+          Builder(builder: (context) {
+            if (widget.loading == true) {
+              return Expanded(
+                  child: Center(child: CircularProgressIndicator()));
+            }
+            return Expanded(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  if (widget.onRefresh != null) await widget.onRefresh();
+                },
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.all(0),
+                  itemCount: widget.data.length,
+                  itemBuilder: (context, index) {
+                    final job = widget.data[index] as Job;
+                    return GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      child: Container(
+                        color: index != indexPressed
+                            ? Color(0xffEDF1F7)
+                            : Color(0xffD7E2F1),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 17),
+                        child: Row(
+                          // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            styledText(job.company.businessName),
+                            styledText(
+                                DateFormat('dd-MM-yyyy').format(job.date)),
+                            styledText(job.payment.quantity.toString()),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            );
+          }),
         ],
       ),
     );

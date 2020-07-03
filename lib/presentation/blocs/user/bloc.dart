@@ -32,6 +32,16 @@ class UserBloc extends BaseBloc<UserState> {
     }
   }
 
+  void getMyJobRecord() async {
+    addLoading(JobListEvent());
+    try {
+      final data = await userRepository.geMyRequestedJobs();
+      addSuccess(JobListEvent(data: data ?? []));
+    } on Exception catch (ex) {
+      addError(JobListEvent(), ex.toString());
+    }
+  }
+
   void getMyCompanies() async {
     addLoading(CompanyListEvent());
     try {

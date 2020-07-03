@@ -70,6 +70,7 @@ class _LoginState extends State<Login> {
                       onChanged: (value) {
                         _username = value;
                       },
+                      
                       hintText: "Usuario",
                       margin: EdgeInsets.only(bottom: 15),
                     ),
