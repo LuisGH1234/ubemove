@@ -9,10 +9,7 @@ class JobRepository {
     return JobRepository._();
   }
 
-  Future<List<dynamic>> creatJobRequested(Job job) async {
-    final response = await jobServices.creatJobRequested(job);
-    return List.from(response.payload['data'])
-        .map((e) => Job.fromJson(e))
-        .toList();
+  Future<void> creatJobRequested(Job job) async {
+    await jobServices.creatJobRequested(job);
   }
 }

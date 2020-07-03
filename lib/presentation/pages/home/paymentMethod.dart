@@ -6,6 +6,8 @@ import 'package:ubermove/domain/models/company.dart';
 import 'package:ubermove/domain/models/job.dart';
 import 'package:ubermove/domain/models/paymentMethod.dart';
 import 'package:ubermove/domain/models/paymentMethodClient.dart';
+import 'package:ubermove/domain/models/user.dart';
+import 'package:ubermove/presentation/blocs/auth/auth.bloc.dart';
 import 'package:ubermove/presentation/blocs/user/user.bloc.dart';
 import 'package:ubermove/presentation/widgets/button.dart';
 
@@ -20,11 +22,16 @@ class _PaymentTMethodListState extends State<PaymentTMethodList> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   PaymentMethod _currentPaymentMethod;
   int _pmID = 0;
+  User _user;
 
   @override
   void initState() {
     super.initState();
     context.bloc<UserBloc>().getMyPaymentMethods();
+    final user = context.bloc<AuthBloc>().state.user.value;
+    setState(() {
+      _user = user;
+    });
   }
 
   void showSnackbarError(String message) {
@@ -57,8 +64,12 @@ class _PaymentTMethodListState extends State<PaymentTMethodList> {
           child: BlocConsumer<UserBloc, UserState>(
             listener: (context, state) {
               if (state.paymentMethodList.loading) return;
+              if (state.createJobEvent.loading) return;
               if (state.paymentMethodList.error) {
                 showSnackbarError(state.paymentMethodList.message);
+              }
+              if (state.createJobEvent.error) {
+                showSnackbarError(state.createJobEvent.message);
               }
             },
             builder: (context, state) {
@@ -92,12 +103,11 @@ class _PaymentTMethodListState extends State<PaymentTMethodList> {
                     ),
                   ),
                   Button("Continuar", onPressed: () {
-
                     Job job = Job(weight: 35, date: DateTime(2020), originAddress: originAddress,
                         destinyAddress: destinationAddress, originLatitude: originLatLng.latitude, originLongitude: originLatLng.longitude,
                         destinyLatitude: destinationLatLng.latitude, destinyLongitude: destinationLatLng.longitude,
                         company: company, totalPrice: totalPrice, paymentMethodClient: PaymentMethodClient(id: _currentPaymentMethod.id),
-                        status: 0, user: User()
+                        status: 0, user: _user
                         );
                     context.bloc<UserBloc>().createJob(job);
                     Navigator.popUntil(context, ModalRoute.withName('/'));

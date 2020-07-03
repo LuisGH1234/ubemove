@@ -33,6 +33,7 @@ class Company extends Entity {
 
   @override
   Map<String, dynamic> convertirJson() => {
+        "id": id,
         "businessName": businessName,
         "ruc": ruc,
         "lastName": email,
