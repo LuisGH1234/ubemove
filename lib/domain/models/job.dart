@@ -70,11 +70,13 @@ class Job extends Entity {
         'destinyLatitude': destinyLatitude,
         'destinyLongitude': destinyLongitude,
         'status': status,
-        'payment': payment.convertirJson(),
+        'payment': payment != null ? payment.convertirJson() : null,
         'totalPrice': totalPrice,
-        'paymentMethodClient': paymentMethodClient.convertirJson(),
-        'company': company.convertirJson(),
-        'user': user.convertirJson(),
+        'paymentMethodClient': paymentMethodClient != null
+            ? paymentMethodClient.convertirJson()
+            : null,
+        'company': company != null ? company.convertirJson() : null,
+        'user': user != null ? user.convertirJson() : null,
       };
 
   @override
