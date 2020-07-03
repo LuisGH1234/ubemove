@@ -20,3 +20,8 @@ Future<http.Response> myPaymentMethods(int userID) {
   final path = "$USER_PATH/$userID/paymentmethods";
   return ApiManager.get(path);
 }
+
+Future<http.Response> myRequestedJobs(int userID) {
+  final path = "$USER_PATH/$userID/jobs";
+  return ApiManager.get(path);
+}

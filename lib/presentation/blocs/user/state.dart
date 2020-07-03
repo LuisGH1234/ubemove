@@ -4,18 +4,22 @@ import 'events.dart';
 
 class UserState extends Equatable {
   final PaymentMethodListEvent paymentMethodList;
+  final JobListEvent jobListEvent;
 
-  UserState({this.paymentMethodList});
+  UserState({this.paymentMethodList, this.jobListEvent});
 
   factory UserState.init() {
     return UserState(paymentMethodList: PaymentMethodListEvent());
   }
 
-  factory UserState.from([UserState state]) {
-    if (state != null) {
-      return UserState(paymentMethodList: state.paymentMethodList);
-    } else
-      return UserState();
+  factory UserState.from(
+    UserState state, {
+    PaymentMethodListEvent paymentMethodList,
+    JobListEvent jobListEvent,
+  }) {
+    return UserState(
+        paymentMethodList: paymentMethodList ?? state.paymentMethodList,
+        jobListEvent: jobListEvent ?? state.jobListEvent);
   }
 
   @override

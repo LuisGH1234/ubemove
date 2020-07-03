@@ -3,23 +3,27 @@ import 'dart:convert';
 import 'package:ubermove/domain/models/paymentMethod.dart';
 import 'package:ubermove/presentation/blocs/core/base_bloc.dart';
 import 'package:ubermove/presentation/blocs/user/state.dart';
+import 'package:ubermove/repository/job.repository.dart';
 import 'package:ubermove/repository/user.repository.dart';
 import './events.dart';
 import '../core/base_events.dart' show BaseEvent;
 
 class UserBloc extends BaseBloc<UserState> {
-  final UserRepository repository;
+  final UserRepository userRepository;
+  final JobRepository jobRepository;
 
-  UserBloc._({this.repository});
+  UserBloc._({this.userRepository, this.jobRepository});
 
   factory UserBloc.build() {
-    return UserBloc._(repository: UserRepository.build());
+    return UserBloc._(
+        userRepository: UserRepository.build(),
+        jobRepository: JobRepository.build());
   }
 
   void getMyPaymentMethods() async {
     addLoading(PaymentMethodListEvent());
     try {
-      final data = await repository.getMyPaymentMethods();
+      final data = await userRepository.getMyPaymentMethods();
       addSuccess(PaymentMethodListEvent(data: data ?? []));
     } on Exception catch (ex) {
       addError(PaymentMethodListEvent(), ex.toString());
@@ -33,7 +37,10 @@ class UserBloc extends BaseBloc<UserState> {
   Stream<UserState> mapEventToState(BaseEvent event) async* {
     switch (event.runtimeType) {
       case PaymentMethodListEvent:
-        yield UserState(paymentMethodList: event);
+        yield UserState.from(state, paymentMethodList: event);
+        break;
+      case JobListEvent:
+        yield UserState.from(state, jobListEvent: event);
         break;
       default:
         print("UserBloc: mapEventToState default on switch statement");
