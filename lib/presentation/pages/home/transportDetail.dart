@@ -127,7 +127,9 @@ class _TransportDetailState extends State<TransportDetail> {
     final  Map<String, Object> arguments = ModalRoute.of(context).settings.arguments;
     print(arguments);
     LatLng originLatLng = arguments["originPoint"];
-    LatLng destinationLatLng = arguments["originPoint"];
+    LatLng destinationLatLng = arguments["destinationPoint"];
+    String originAddress = arguments["originAddress"];
+    String destinationAddress = arguments["destinationAddress"];
     final Position start = Position(latitude: originLatLng.latitude , longitude : originLatLng.longitude);
     final Position destination = Position(latitude: destinationLatLng.latitude , longitude : destinationLatLng.longitude);
     _createPolylines(start, destination);
@@ -230,8 +232,19 @@ class _TransportDetailState extends State<TransportDetail> {
                               child: Button(
                                 "CONTINUAR",
                                 onPressed: () {
+                                  print(arguments["originAddress"]);
+                                  print(arguments["destinationAddress"]);
+                                  print(arguments["originPoint"]);
+                                  print(totalPrice);
                                   Navigator.of(context)
-                                      .pushNamed(PaymentTMethodList.PATH);
+                                      .pushNamed(PaymentTMethodList.PATH, arguments: {
+                                        "originAddress": originAddress,
+                                        "destinationAddress" : destinationAddress,
+                                        "originPoint": originLatLng,
+                                        "destinationPoint": destinationLatLng,
+                                        "company": _currentCompany,
+                                        "totalPrice" : totalPrice,
+                                  });
                                 },
                               ),
                             ),

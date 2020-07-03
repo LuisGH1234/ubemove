@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ubermove/common/constants/colors.dart';
+import 'package:ubermove/domain/models/company.dart';
 import 'package:ubermove/domain/models/job.dart';
 import 'package:ubermove/domain/models/paymentMethod.dart';
+import 'package:ubermove/domain/models/paymentMethodClient.dart';
 import 'package:ubermove/presentation/blocs/user/user.bloc.dart';
 import 'package:ubermove/presentation/widgets/button.dart';
 
@@ -34,6 +37,16 @@ class _PaymentTMethodListState extends State<PaymentTMethodList> {
 
   @override
   Widget build(BuildContext context) {
+
+    final  Map<String, Object> arguments = ModalRoute.of(context).settings.arguments;
+
+    LatLng originLatLng = arguments["originPoint"];
+    LatLng destinationLatLng = arguments["destinationPoint"];
+    String originAddress = arguments["originAddress"];
+    String destinationAddress = arguments["destinationAddress"];
+    Company company = arguments["company"];
+    int totalPrice = arguments["totalPrice"];
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(title: Text('Metodos de Pago')),
@@ -72,13 +85,20 @@ class _PaymentTMethodListState extends State<PaymentTMethodList> {
                               setState(() {
                                 _pmID = value;
                                 _currentPaymentMethod = e;
+                                print(_currentPaymentMethod.description);
                               });
                             });
                       }).toList(),
                     ),
                   ),
                   Button("Continuar", onPressed: () {
-                    Job job;
+
+                    Job job = Job(weight: 35, date: DateTime(2020), originAddress: originAddress,
+                        destinyAddress: destinationAddress, originLatitude: originLatLng.latitude, originLongitude: originLatLng.longitude,
+                        destinyLatitude: destinationLatLng.latitude, destinyLongitude: destinationLatLng.longitude,
+                        company: company, totalPrice: totalPrice, paymentMethodClient: PaymentMethodClient(id: _currentPaymentMethod.id),
+                        status: 0, user: User()
+                        );
                     context.bloc<UserBloc>().createJob(job);
                     Navigator.popUntil(context, ModalRoute.withName('/'));
                   }),
