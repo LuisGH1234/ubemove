@@ -130,11 +130,35 @@ class _TransportDetailState extends State<TransportDetail> {
     final Position destination = Position(
         latitude: destinationLatLng.latitude,
         longitude: destinationLatLng.longitude);
+    final Set<Marker> _markers = Set();
     _createPolylines(start, destination);
+
+    void setMarkers() {
+      setState(() {
+        _markers.add(
+          Marker(
+            markerId: MarkerId('origin'),
+            position: LatLng(originLatLng.latitude, originLatLng.longitude),
+          ),
+        );
+        _markers.add(Marker(
+          markerId: MarkerId('destination'),
+          position:
+              LatLng(destinationLatLng.latitude, destinationLatLng.longitude),
+        ));
+      });
+    }
+
+    CameraPosition mapCameraPosition = CameraPosition(
+      target: LatLng((originLatLng.latitude + destinationLatLng.latitude / 2) , (originLatLng.longitude + destinationLatLng.longitude / 2) ),
+      zoom: 3,
+    );
 
     // final Map<String, Object> arguments =
     //     ModalRoute.of(context).settings.arguments;
     // print(arguments);
+
+    setMarkers();
 
     return Scaffold(
       key: _scaffoldKey,
@@ -216,10 +240,11 @@ class _TransportDetailState extends State<TransportDetail> {
                       children: <Widget>[
                         GoogleMap(
                           mapType: MapType.normal,
-                          initialCameraPosition: _kGooglePlex,
+                          initialCameraPosition: mapCameraPosition,
                           onMapCreated: (GoogleMapController controller) {
                             _controller.complete(controller);
                           },
+                          markers: _markers,
                           polylines: Set<Polyline>.of(polylines.values),
                         ),
                         Positioned(
