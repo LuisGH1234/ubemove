@@ -23,7 +23,7 @@ class TransportDetail extends StatefulWidget {
 class _TransportDetailState extends State<TransportDetail> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   Completer<GoogleMapController> _controller = Completer();
-
+  GoogleMapController mapController;
   List<DropdownMenuItem<String>> _dropDownMenuItems;
   String _currentCompanyString;
   Company _currentCompany;
@@ -35,34 +35,8 @@ class _TransportDetailState extends State<TransportDetail> {
 
   Map<PolylineId, Polyline> polylines = {};
 
-  // final LatLng _center = const LatLng(-12.0749822, -77.0449321);
-
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
-  // void _onMapCreated(GoogleMapController controller) {
-  //   mapController = controller;
-/*
-  List<DropdownMenuItem<String>> getDropDownMenuItems() {
-    List<DropdownMenuItem<String>> items = new List();
-    /*for (String company in _companies) {
-      items.add(new DropdownMenuItem(value: company, child: new Text(company)));
-    }*/
-    return items;
-  }
-*/
   _createPolylines(Position start, Position destination) async {
-    // Initializing PolylinePoints
     polylinePoints = PolylinePoints();
-
-    // Generating the list of coordinates to be used for
-    // drawing the polylines
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       googleMapsApiKey, // Google Maps API Key
       PointLatLng(start.latitude, start.longitude),
@@ -70,25 +44,19 @@ class _TransportDetailState extends State<TransportDetail> {
       travelMode: TravelMode.transit,
     );
 
-    // Adding the coordinates to the list
     if (result.points.isNotEmpty) {
       result.points.forEach((PointLatLng point) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
     }
 
-    // Defining an ID
     PolylineId id = PolylineId('poly');
-
-    // Initializing Polyline
     Polyline polyline = Polyline(
       polylineId: id,
       color: Colors.red,
       points: polylineCoordinates,
       width: 3,
     );
-
-    // Adding the polyline to the map
     polylines[id] = polyline;
   }
 
@@ -125,13 +93,31 @@ class _TransportDetailState extends State<TransportDetail> {
     LatLng destinationLatLng = arguments["destinationPoint"];
     String originAddress = arguments["originAddress"];
     String destinationAddress = arguments["destinationAddress"];
+
     final Position start = Position(
         latitude: originLatLng.latitude, longitude: originLatLng.longitude);
+
     final Position destination = Position(
         latitude: destinationLatLng.latitude,
         longitude: destinationLatLng.longitude);
+
     final Set<Marker> _markers = Set();
     _createPolylines(start, destination);
+
+    // Define two position variables
+
+    Position _northeastCoordinates;
+    Position _southwestCoordinates;
+
+
+    if (start.latitude <= destination.latitude) {
+      _southwestCoordinates = start;
+      _northeastCoordinates = destination;
+    } else {
+      _southwestCoordinates = destination;
+      _northeastCoordinates = start;
+    }
+
 
     void setMarkers() {
       setState(() {
@@ -149,14 +135,8 @@ class _TransportDetailState extends State<TransportDetail> {
       });
     }
 
-    CameraPosition mapCameraPosition = CameraPosition(
-      target: LatLng((originLatLng.latitude + destinationLatLng.latitude / 2) , (originLatLng.longitude + destinationLatLng.longitude / 2) ),
-      zoom: 3,
-    );
 
-    // final Map<String, Object> arguments =
-    //     ModalRoute.of(context).settings.arguments;
-    // print(arguments);
+    CameraPosition _initialLocation = CameraPosition(target: originLatLng, zoom: 12);
 
     setMarkers();
 
@@ -240,7 +220,7 @@ class _TransportDetailState extends State<TransportDetail> {
                       children: <Widget>[
                         GoogleMap(
                           mapType: MapType.normal,
-                          initialCameraPosition: mapCameraPosition,
+                          initialCameraPosition: _initialLocation,
                           onMapCreated: (GoogleMapController controller) {
                             _controller.complete(controller);
                           },
