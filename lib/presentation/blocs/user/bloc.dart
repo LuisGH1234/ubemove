@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:ubermove/domain/models/job.dart';
 import 'package:ubermove/domain/models/paymentMethod.dart';
+import 'package:ubermove/domain/models/user.dart';
 import 'package:ubermove/presentation/blocs/core/base_bloc.dart';
 import 'package:ubermove/presentation/blocs/user/state.dart';
 import 'package:ubermove/repository/job.repository.dart';
@@ -51,6 +52,16 @@ class UserBloc extends BaseBloc<UserState> {
     }
   }
 
+  void udpdateProfile(User user) async {
+    addLoading(UpdateProfileEvent());
+    try {
+      await userRepository.updateMyProfile(user);
+      addSuccess(UpdateProfileEvent(success: true));
+    } on Exception catch (ex) {
+      addError(UpdateProfileEvent(), ex.toString());
+    }
+  }
+
   @override
   UserState get initialState => UserState.init();
 
@@ -68,6 +79,9 @@ class UserBloc extends BaseBloc<UserState> {
         break;
       case CreateJobEvent:
         yield UserState.from(state, createJobEvent: event);
+        break;
+      case UpdateProfileEvent:
+        yield UserState.from(state, updateProfileEvent: event);
         break;
       default:
         print("UserBloc: mapEventToState default on switch statement");

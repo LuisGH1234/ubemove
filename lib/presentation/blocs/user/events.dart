@@ -8,3 +8,4 @@ class PaymentMethodListEvent = ListPayload<PaymentMethod> with BaseEvent;
 class CompanyListEvent = ListPayload<Company> with BaseEvent;
 class JobListEvent = ListPayload<Job> with BaseEvent;
 class CreateJobEvent = Process with BaseEvent;
+class UpdateProfileEvent = Process with BaseEvent;
