@@ -52,6 +52,10 @@ class UserBloc extends BaseBloc<UserState> {
     }
   }
 
+  void resetCreateJob() {
+    add(CreateJobEvent());
+  }
+
   void udpdateProfile(User user) async {
     addLoading(UpdateProfileEvent());
     try {
