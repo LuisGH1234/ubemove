@@ -7,7 +7,7 @@ class AuthState extends Equatable {
   final AuthenticateEvent authEvent;
   final LoginEvent loginEvent;
   final RegistroEvent registroEvent;
-  final User user;
+  final UserEvent user;
 
   AuthState({this.authEvent, this.loginEvent, this.registroEvent, this.user});
 
@@ -15,14 +15,15 @@ class AuthState extends Equatable {
     return AuthState(
         authEvent: AuthenticateEvent(),
         loginEvent: LoginEvent(),
-        registroEvent: RegistroEvent());
+        registroEvent: RegistroEvent(),
+        user: UserEvent());
   }
 
   factory AuthState.from(AuthState state,
       {AuthenticateEvent authEvent,
       LoginEvent loginEvent,
       RegistroEvent registroEvent,
-      User user}) {
+      UserEvent user}) {
     return AuthState(
       authEvent: authEvent ?? state.authEvent,
       loginEvent: loginEvent ?? state.loginEvent,

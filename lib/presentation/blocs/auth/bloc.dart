@@ -26,6 +26,10 @@ class AuthBloc extends BaseBloc<AuthState> {
     add(AuthenticateEvent()..isAuthenticated = false);
   }
 
+  void setUser(User user) {
+    addSuccess(UserEvent(value: user));
+  }
+
   void login(String username, String password) async {
     addLoading(LoginEvent());
     try {
@@ -76,13 +80,18 @@ class AuthBloc extends BaseBloc<AuthState> {
         break;
       case LoginEvent:
         yield AuthState.from(state,
-            loginEvent: event, user: (event as LoginEvent).value)
+            loginEvent: event,
+            user: UserEvent(value: (event as LoginEvent).value))
           ..isAuthenticated = !event.error && !event.loading;
         break;
       case RegistroEvent:
         yield AuthState.from(state,
-            registroEvent: event, user: (event as RegistroEvent).value)
+            registroEvent: event,
+            user: UserEvent(value: (event as RegistroEvent).value))
           ..isAuthenticated = !event.error && !event.loading;
+        break;
+      case UserEvent:
+        yield AuthState.from(state, user: event);
         break;
       default:
         print("AuthBloc: mapEventToState default on switch statement");
