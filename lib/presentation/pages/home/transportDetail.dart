@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/src/response.dart';
 import 'package:ubermove/common/constants/colors.dart';
@@ -29,6 +31,12 @@ class _TransportDetailState extends State<TransportDetail> {
 
   List<DropdownMenuItem<String>> _dropDownMenuItems;
   String _currentCompany;
+  PolylinePoints polylinePoints;
+  String googleMapsApiKey = "AIzaSyDYGiwEMi6u7dvyWQKMZ4j7kyqJVq7h4zs";
+
+  List<LatLng> polylineCoordinates = [];
+
+  Map<PolylineId, Polyline> polylines = {};
 
   // final LatLng _center = const LatLng(-12.0749822, -77.0449321);
 
@@ -52,6 +60,40 @@ class _TransportDetailState extends State<TransportDetail> {
     return items;
   }
 */
+  _createPolylines(Position start, Position destination) async {
+    // Initializing PolylinePoints
+    polylinePoints = PolylinePoints();
+
+    // Generating the list of coordinates to be used for
+    // drawing the polylines
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      googleMapsApiKey, // Google Maps API Key
+      PointLatLng(start.latitude, start.longitude),
+      PointLatLng(destination.latitude, destination.longitude),
+      travelMode: TravelMode.transit,
+    );
+
+    // Adding the coordinates to the list
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+    }
+
+    // Defining an ID
+    PolylineId id = PolylineId('poly');
+
+    // Initializing Polyline
+    Polyline polyline = Polyline(
+      polylineId: id,
+      color: Colors.red,
+      points: polylineCoordinates,
+      width: 3,
+    );
+
+    // Adding the polyline to the map
+    polylines[id] = polyline;
+  }
 
 
   @override
@@ -68,7 +110,12 @@ class _TransportDetailState extends State<TransportDetail> {
   Widget build(BuildContext context) {
     final  Map<String, Object> arguments = ModalRoute.of(context).settings.arguments;
     print(arguments);
-
+    LatLng originLatLng = arguments["originPoint"];
+    LatLng destinationLatLng = arguments["originPoint"];
+    final Position start = Position(latitude: originLatLng.latitude , longitude : originLatLng.longitude);
+    final Position destination = Position(latitude: destinationLatLng.latitude , longitude : destinationLatLng.longitude);
+    _createPolylines(start, destination);
+    
     void changedDropDownItem(String selectedCompany) {
       setState(() {
         _currentCompany = selectedCompany;
@@ -139,6 +186,7 @@ class _TransportDetailState extends State<TransportDetail> {
                           onMapCreated: (GoogleMapController controller) {
                             _controller.complete(controller);
                           },
+                          polylines: Set<Polyline>.of(polylines.values),
                         ),
                         Positioned(
                           bottom: 0,
