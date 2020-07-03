@@ -9,7 +9,6 @@ import 'package:ubermove/presentation/widgets/date_picker.dart';
 import 'package:ubermove/presentation/widgets/input.dart';
 import 'package:geolocator/geolocator.dart';
 
-
 class Home extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _HomeState();
@@ -20,6 +19,8 @@ class _HomeState extends State<Home> {
   Position _currentPosition;
   String _permissionStatus;
   Future<CameraPosition> _cameraPositionFurure;
+  DateTime date = DateTime(2020);
+  TimeOfDay time = TimeOfDay(hour: 0, minute: 0);
   // final LatLng _center = const LatLng(-12.0749822, -77.0449321);
 
   @override
@@ -30,8 +31,8 @@ class _HomeState extends State<Home> {
   }
 
   Future navigateToSpecifyDestination(context) async {
-
-    Navigator.pushNamed(context, SpecifyDestination.PATH, arguments: _kGooglePlex);
+    Navigator.pushNamed(context, SpecifyDestination.PATH,
+        arguments: _kGooglePlex);
     //Navigator.push(context, MaterialPageRoute(builder: (context) => TransportDetail()));
   }
 
@@ -115,17 +116,27 @@ class _HomeState extends State<Home> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 15),
           child: RangeDatePicker(
-            onSaveEndDate: (date) {},
-            onSaveSartDate: (date) {},
+            time: time,
+            date: date,
+            onSaveTime: (selectedTime) {
+              setState(() {
+                time = selectedTime;
+              });
+            },
+            onSaveDate: (selectedDate) {
+              setState(() {
+                date = selectedDate;
+              });
+            },
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 15),
-          child: RangeDatePicker(
-            onSaveEndDate: (date) {},
-            onSaveSartDate: (date) {},
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.only(bottom: 15),
+        //   child: RangeDatePicker(
+        //     onSaveEndDate: (date) {},
+        //     onSaveSartDate: (date) {},
+        //   ),
+        // ),
         Padding(
           padding: const EdgeInsets.only(bottom: 15),
           child: Input(
@@ -133,7 +144,6 @@ class _HomeState extends State<Home> {
             hintText: "Peso de la carga",
           ),
         ),
-
         Expanded(
             child: Stack(
           children: <Widget>[
