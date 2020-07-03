@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ubermove/common/constants/colors.dart';
+import 'package:ubermove/domain/models/job.dart';
+import 'package:ubermove/domain/models/paymentMethod.dart';
 import 'package:ubermove/presentation/blocs/user/user.bloc.dart';
 import 'package:ubermove/presentation/widgets/button.dart';
 
@@ -13,6 +15,7 @@ class PaymentTMethodList extends StatefulWidget {
 
 class _PaymentTMethodListState extends State<PaymentTMethodList> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  PaymentMethod _currentPaymentMethod;
   int _pmID = 0;
 
   @override
@@ -68,12 +71,15 @@ class _PaymentTMethodListState extends State<PaymentTMethodList> {
                             onChanged: (value) {
                               setState(() {
                                 _pmID = value;
+                                _currentPaymentMethod = e;
                               });
                             });
                       }).toList(),
                     ),
                   ),
                   Button("Continuar", onPressed: () {
+                    Job job;
+                    context.bloc<UserBloc>().createJob(job);
                     Navigator.popUntil(context, ModalRoute.withName('/'));
                   }),
                 ],

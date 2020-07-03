@@ -15,6 +15,7 @@ class Job extends Entity {
   final num destinyLatitude;
   final num destinyLongitude;
   final int status;
+  final int totalPrice;
   final PaymentMethodClient paymentMethodClient;
   final Company company;
   final User user;
@@ -31,6 +32,7 @@ class Job extends Entity {
       this.destinyLatitude,
       this.destinyLongitude,
       this.status,
+      this.totalPrice,
       this.paymentMethodClient,
       this.company,
       this.user});
@@ -45,6 +47,7 @@ class Job extends Entity {
       destinyAddress: json['destinyAddress'],
       originLatitude: json['originLatitude'],
       originLongitude: json['originLongitude'],
+      totalPrice: json['totalPrice'],
       destinyLatitude: json['destinyLatitude'],
       destinyLongitude: json['destinyLongitude'],
       status: json['status'],
@@ -62,6 +65,7 @@ class Job extends Entity {
         'destinyLatitude': destinyLatitude,
         'destinyLongitude': destinyLongitude,
         'status': status,
+        'totalPrice': totalPrice,
         'paymentMethodClient': paymentMethodClient.convertirJson(),
         'company': company.convertirJson(),
         'user': user.convertirJson(),

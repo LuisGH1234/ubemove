@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/src/response.dart';
 import 'package:ubermove/common/constants/colors.dart';
+import 'package:ubermove/domain/models/company.dart';
 import 'package:ubermove/network/core/api_manager.dart';
 import 'package:ubermove/presentation/blocs/user/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,7 +32,9 @@ class _TransportDetailState extends State<TransportDetail> {
   Completer<GoogleMapController> _controller = Completer();
 
   List<DropdownMenuItem<String>> _dropDownMenuItems;
-  String _currentCompany;
+  String _currentCompanyString;
+  Company _currentCompany;
+  int totalPrice = 0;
   PolylinePoints polylinePoints;
   String googleMapsApiKey = "AIzaSyDYGiwEMi6u7dvyWQKMZ4j7kyqJVq7h4zs";
 
@@ -114,7 +117,7 @@ class _TransportDetailState extends State<TransportDetail> {
 
   void changedDropDownItem(String selectedCompany) {
     setState(() {
-      _currentCompany = selectedCompany;
+      _currentCompanyString = selectedCompany;
     });
   }
 
@@ -128,12 +131,6 @@ class _TransportDetailState extends State<TransportDetail> {
     final Position start = Position(latitude: originLatLng.latitude , longitude : originLatLng.longitude);
     final Position destination = Position(latitude: destinationLatLng.latitude , longitude : destinationLatLng.longitude);
     _createPolylines(start, destination);
-    
-    void changedDropDownItem(String selectedCompany) {
-      setState(() {
-        _currentCompany = selectedCompany;
-      });
-    }
 
     // final Map<String, Object> arguments =
     //     ModalRoute.of(context).settings.arguments;
@@ -168,9 +165,9 @@ class _TransportDetailState extends State<TransportDetail> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 15),
                     child: Text(
-                      'S/. 200.00',
+                      'S/. $totalPrice',
                       style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Padding(
@@ -192,20 +189,24 @@ class _TransportDetailState extends State<TransportDetail> {
                   Padding(
                       padding: const EdgeInsets.only(bottom: 15),
                       child: DropdownButton(
+                        hint: Text('Escoja la compañia'),
                         value: _currentCompany,
                         items: state.companyListEvent.data
-                            .map((e) => DropdownMenuItem<String>(
-                                  child: Text(e.businessName +
-                                      "     " +
-                                      e.fare.toString()),
-                                ))
+                            .map((e) => DropdownMenuItem<Company>(
+                          child: Text(e.businessName +
+                              "     " +
+                              e.fare.toString()),
+                          value: e,
+                        ))
                             .toList(),
                         onChanged: state.companyListEvent.error ||
-                                state.companyListEvent.loading
+                            state.companyListEvent.loading
                             ? null
-                            : (selectedCompany) => setState(() {
-                                  _currentCompany = selectedCompany;
-                                }),
+                            : (Company selectedCompany) => setState(() {
+                          _currentCompany = selectedCompany;
+                          totalPrice = selectedCompany.fare * 35;
+                          print(_currentCompany.businessName);
+                        }),
                       )),
                   Expanded(
                     child: Stack(
