@@ -100,6 +100,7 @@ class _RegisterState extends State<Register> {
                                 firstName: _firstname,
                                 lastName: _lasttname,
                                 active: true,
+                                phone: _phone,
                                 password: _password);
                             authBloc.registro(data);
                           }
