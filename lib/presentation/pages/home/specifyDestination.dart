@@ -23,9 +23,9 @@ class _SpecifyDestinationState extends State<SpecifyDestination> {
   static const kGoogleApiKey = "AIzaSyDYGiwEMi6u7dvyWQKMZ4j7kyqJVq7h4zs";
   GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 
-  Future navigateToTransportDetail(context, weight, originPoint, destinationPoint, originAddress, destinationAddress) async {
+  Future navigateToTransportDetail(context, weight, date, originPoint, destinationPoint, originAddress, destinationAddress) async {
     Navigator.pushNamed(context, TransportDetail.PATH,
-        arguments: {"weight": weight, "originPoint": originPoint, "destinationPoint": destinationPoint, "originAddress": originAddress, "destinationAddress": destinationAddress });
+        arguments: {"weight": weight, "date": date, "originPoint": originPoint, "destinationPoint": destinationPoint, "originAddress": originAddress, "destinationAddress": destinationAddress });
   }
 
 
@@ -33,6 +33,7 @@ class _SpecifyDestinationState extends State<SpecifyDestination> {
   Widget build(BuildContext context) {
     final  Map<String, Object> arguments = ModalRoute.of(context).settings.arguments;
     CameraPosition origin = arguments["originCameraPosition"];
+    DateTime date = arguments["date"];
     int weight = arguments["weight"];
     LatLng originPoint = LatLng(origin.target.latitude, origin.target.longitude);
     String originAddress;
@@ -66,7 +67,7 @@ class _SpecifyDestinationState extends State<SpecifyDestination> {
                         destinationPoint = await getLatLngFromAddress(destinationAddress);
                         print(originAddress);
                         print(destinationAddress);
-                        navigateToTransportDetail(context, weight, originPoint, destinationPoint, originAddress, destinationAddress);
+                        navigateToTransportDetail(context, weight, date, originPoint, destinationPoint, originAddress, destinationAddress);
                         //Navigator.of(context).pop();
                       },
                       initialPosition: LatLng(origin.target.latitude, origin.target.longitude),

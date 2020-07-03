@@ -9,7 +9,6 @@ import 'package:ubermove/presentation/widgets/date_picker.dart';
 import 'package:ubermove/presentation/widgets/input.dart';
 import 'package:geolocator/geolocator.dart';
 
-
 class Home extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _HomeState();
@@ -19,8 +18,12 @@ class _HomeState extends State<Home> {
   Completer<GoogleMapController> _controller = Completer();
   Position _currentPosition;
   String _permissionStatus;
+
   Future<CameraPosition> _cameraPositionFuture;
   String _currentWeight = "";
+  DateTime date = DateTime(2020);
+  TimeOfDay time = TimeOfDay(hour: 0, minute: 0);
+
   // final LatLng _center = const LatLng(-12.0749822, -77.0449321);
 
   @override
@@ -31,8 +34,10 @@ class _HomeState extends State<Home> {
   }
 
   Future navigateToSpecifyDestination(context) async {
+    DateTime dateTime = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+    Navigator.pushNamed(context, SpecifyDestination.PATH, arguments: {"originCameraPosition" : _kGooglePlex, "weight" : int.parse(_currentWeight),
+      "date": dateTime});
 
-    Navigator.pushNamed(context, SpecifyDestination.PATH, arguments: {"originCameraPosition" : _kGooglePlex, "weight" : int.parse(_currentWeight)});
     //Navigator.push(context, MaterialPageRoute(builder: (context) => TransportDetail()));
   }
 
@@ -109,17 +114,20 @@ class _HomeState extends State<Home> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          child: RangeDatePicker(
-            onSaveEndDate: (date) { print(date);},
-            onSaveSartDate: (date) {},
-          ),
-        ),
-        Padding(
           padding: const EdgeInsets.only(bottom: 15),
           child: RangeDatePicker(
-            onSaveEndDate: (date) {},
-            onSaveSartDate: (date) {},
+            time: time,
+            date: date,
+            onSaveTime: (selectedTime) {
+              setState(() {
+                time = selectedTime;
+              });
+            },
+            onSaveDate: (selectedDate) {
+              setState(() {
+                date = selectedDate;
+              });
+            },
           ),
         ),
         Padding(
@@ -135,7 +143,6 @@ class _HomeState extends State<Home> {
             },
           ),
         ),
-
         Expanded(
             child: Stack(
           children: <Widget>[
