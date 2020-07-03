@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ubermove/presentation/app.dart';
 import 'package:ubermove/presentation/blocs/auth/bloc.dart';
+import 'package:ubermove/presentation/blocs/user/bloc.dart';
 
 void main() => runApp(SetUpApp());
 
@@ -19,6 +20,9 @@ class SetUpApp extends StatelessWidget {
         BlocProvider<AuthBloc>(
           create: (context) => AuthBloc.build(),
         ),
+        BlocProvider<UserBloc>(
+          create: (context) => UserBloc.build(),
+        )
       ],
       child: App(),
     );

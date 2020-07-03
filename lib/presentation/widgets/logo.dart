@@ -3,10 +3,11 @@ import 'package:ubermove/common/assets/images.dart' as images;
 
 class Logo extends StatelessWidget {
   final double width;
+  final double height;
   final EdgeInsetsGeometry margin;
   final EdgeInsetsGeometry padding;
 
-  Logo({this.width, this.margin, this.padding});
+  Logo({this.width, this.margin, this.padding, this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +23,7 @@ class Logo extends StatelessWidget {
         child: Image.asset(
           images.LOGO,
           width: this.width,
+          height: height,
         ),
       ),
     );

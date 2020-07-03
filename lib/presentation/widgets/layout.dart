@@ -9,14 +9,14 @@ class Layout extends StatelessWidget {
 
   Layout({
     @required this.children,
-    this.horizontalPadding = 20.0,
+    this.horizontalPadding = 0.0,
     this.isKeyboardSafeArea = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final container = Container(
-      color: $Colors.BACKGROUD,
+      // color: $Colors.BACKGROUD,
       padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
       child: Column(
         // mainAxisAlignment: MainAxisAlignment.center,

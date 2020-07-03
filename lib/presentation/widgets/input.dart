@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../common/constants/colors.dart';
 
 class Input extends Container {
+  final String initialValue;
+  final TextInputType keyboardType;
   final double height;
   final String hintText;
   final TextEditingController controller;
@@ -12,8 +14,10 @@ class Input extends Container {
 
   Input(
       {this.hintText,
+      this.initialValue,
       this.controller,
       this.onChanged,
+      this.keyboardType,
       this.obscureText = false,
       // this.onSaved,
       // this.validator,
@@ -40,7 +44,9 @@ class Input extends Container {
             transform: transform);
 
   @override
-  Widget get child => TextField(
+  Widget get child => TextFormField(
+        initialValue: initialValue,
+        keyboardType: keyboardType,
         obscureText: this.obscureText,
         // validator: this.validator,
         // onSaved: this.onSaved,
@@ -48,6 +54,17 @@ class Input extends Container {
         // autofocus: false,
         controller: this.controller,
         decoration: InputDecoration(
+          // suffixText: 'bpm',
+          // prefix: Container(
+          //   child: FlatButton(
+          //     padding: EdgeInsets.all(0),
+          //     onPressed: () {},
+          //     child: Text('A'),
+          //     color: Colors.amberAccent,
+          //   ),
+          //   height: 24,
+          //   width: 24,
+          // ),
           hintText: hintText,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(4),
