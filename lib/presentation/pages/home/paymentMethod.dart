@@ -72,6 +72,8 @@ class _PaymentTMethodListState extends State<PaymentTMethodList> {
               }
               if (state.createJobEvent.error) {
                 showSnackbarError(state.createJobEvent.message);
+              } else if (state.createJobEvent.success == true) {
+                Navigator.popUntil(context, ModalRoute.withName('/'));
               }
             },
             builder: (context, state) {
@@ -104,7 +106,8 @@ class _PaymentTMethodListState extends State<PaymentTMethodList> {
                       }).toList(),
                     ),
                   ),
-                  Button("Continuar", onPressed: () {
+                  Button("Continuar", loading: state.createJobEvent.loading,
+                      onPressed: () {
                     if (_pmID == null || _pmID == 0) {
                       showSnackbarError(
                           "Es obligatorio seleccionar un método de pago");
@@ -126,7 +129,6 @@ class _PaymentTMethodListState extends State<PaymentTMethodList> {
                         status: 0,
                         user: _user);
                     context.bloc<UserBloc>().createJob(job);
-                    Navigator.popUntil(context, ModalRoute.withName('/'));
                   }),
                 ],
               );

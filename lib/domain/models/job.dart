@@ -62,7 +62,7 @@ class Job extends Entity {
   @override
   Map<String, dynamic> convertirJson() => {
         'weight': weight,
-        'date': date,
+        'date': date.toString(),
         'originAddress': originAddress,
         'destinyAddress': destinyAddress,
         'originLatitude': originLatitude,
