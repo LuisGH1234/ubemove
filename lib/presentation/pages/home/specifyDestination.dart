@@ -23,15 +23,17 @@ class _SpecifyDestinationState extends State<SpecifyDestination> {
   static const kGoogleApiKey = "AIzaSyDYGiwEMi6u7dvyWQKMZ4j7kyqJVq7h4zs";
   GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 
-  Future navigateToTransportDetail(context, originPoint, destinationPoint, originAddress, destinationAddress) async {
+  Future navigateToTransportDetail(context, weight, originPoint, destinationPoint, originAddress, destinationAddress) async {
     Navigator.pushNamed(context, TransportDetail.PATH,
-        arguments: {"originPoint": originPoint, "destinationPoint": destinationPoint, "originAddress": originAddress, "destinationAddress": destinationAddress });
+        arguments: {"weight": weight, "originPoint": originPoint, "destinationPoint": destinationPoint, "originAddress": originAddress, "destinationAddress": destinationAddress });
   }
 
 
   @override
   Widget build(BuildContext context) {
-    CameraPosition origin = ModalRoute.of(context).settings.arguments;
+    final  Map<String, Object> arguments = ModalRoute.of(context).settings.arguments;
+    CameraPosition origin = arguments["originCameraPosition"];
+    int weight = arguments["weight"];
     LatLng originPoint = LatLng(origin.target.latitude, origin.target.longitude);
     String originAddress;
     LatLng destinationPoint;
@@ -64,23 +66,9 @@ class _SpecifyDestinationState extends State<SpecifyDestination> {
                         destinationPoint = await getLatLngFromAddress(destinationAddress);
                         print(originAddress);
                         print(destinationAddress);
-                        navigateToTransportDetail(context, originPoint, destinationPoint, originAddress, destinationAddress);
+                        navigateToTransportDetail(context, weight, originPoint, destinationPoint, originAddress, destinationAddress);
                         //Navigator.of(context).pop();
                       },
-                      /*selectedPlaceWidgetBuilder: (_, selectedPlace, state, isSearchBarFocused) {
-                        return isSearchBarFocused
-                            ? Container()
-                        // Use FloatingCard or just create your own Widget.
-                            : FloatingCard(
-                          bottomPosition: MediaQuery.of(context).size.height * 0.05,
-                          leftPosition: MediaQuery.of(context).size.width * 0.05,
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          borderRadius: BorderRadius.circular(12.0),
-                          child: state == SearchingState.Searching ?
-                          Center(child: CircularProgressIndicator()) :
-                          RaisedButton(onPressed: () { print("do something with [selectedPlace] data"); },),
-                        );
-                      },*/
                       initialPosition: LatLng(origin.target.latitude, origin.target.longitude),
                       useCurrentLocation: true,
                     ),

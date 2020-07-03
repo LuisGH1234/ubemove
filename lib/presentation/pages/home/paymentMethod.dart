@@ -47,6 +47,7 @@ class _PaymentTMethodListState extends State<PaymentTMethodList> {
 
     final  Map<String, Object> arguments = ModalRoute.of(context).settings.arguments;
 
+    int weight = arguments["weight"];
     LatLng originLatLng = arguments["originPoint"];
     LatLng destinationLatLng = arguments["destinationPoint"];
     String originAddress = arguments["originAddress"];
@@ -103,7 +104,7 @@ class _PaymentTMethodListState extends State<PaymentTMethodList> {
                     ),
                   ),
                   Button("Continuar", onPressed: () {
-                    Job job = Job(weight: 35, date: DateTime(2020), originAddress: originAddress,
+                    Job job = Job(weight: weight, date: DateTime(2020), originAddress: originAddress,
                         destinyAddress: destinationAddress, originLatitude: originLatLng.latitude, originLongitude: originLatLng.longitude,
                         destinyLatitude: destinationLatLng.latitude, destinyLongitude: destinationLatLng.longitude,
                         company: company, totalPrice: totalPrice, paymentMethodClient: PaymentMethodClient(id: _currentPaymentMethod.id),

@@ -19,19 +19,20 @@ class _HomeState extends State<Home> {
   Completer<GoogleMapController> _controller = Completer();
   Position _currentPosition;
   String _permissionStatus;
-  Future<CameraPosition> _cameraPositionFurure;
+  Future<CameraPosition> _cameraPositionFuture;
+  String _currentWeight = "";
   // final LatLng _center = const LatLng(-12.0749822, -77.0449321);
 
   @override
   void initState() {
     super.initState();
-    _cameraPositionFurure = setCameraPosition();
+    _cameraPositionFuture = setCameraPosition();
     // streamController = StreamController.broadcast();
   }
 
   Future navigateToSpecifyDestination(context) async {
 
-    Navigator.pushNamed(context, SpecifyDestination.PATH, arguments: _kGooglePlex);
+    Navigator.pushNamed(context, SpecifyDestination.PATH, arguments: {"originCameraPosition" : _kGooglePlex, "weight" : int.parse(_currentWeight)});
     //Navigator.push(context, MaterialPageRoute(builder: (context) => TransportDetail()));
   }
 
@@ -39,11 +40,6 @@ class _HomeState extends State<Home> {
     // if (await Permission.location.isUndetermined) {
     final Geolocator geolocator = Geolocator()
       ..forceAndroidLocationManager = true;
-    // final geolocationStatus = await getPermission(geolocator);
-    // print("Per: " + geolocationStatus.toString());
-    // if (geolocationStatus.value == GeolocationStatus.denied.value ||
-    //     geolocationStatus.value == GeolocationStatus.restricted.value)
-    //   throw Exception("No se aprobó los permisos de localozación");
 
     print("aaaaa1");
     final position = await geolocator.getCurrentPosition(
@@ -115,7 +111,7 @@ class _HomeState extends State<Home> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 15),
           child: RangeDatePicker(
-            onSaveEndDate: (date) {},
+            onSaveEndDate: (date) { print(date);},
             onSaveSartDate: (date) {},
           ),
         ),
@@ -131,6 +127,12 @@ class _HomeState extends State<Home> {
           child: Input(
             keyboardType: TextInputType.number,
             hintText: "Peso de la carga",
+            onChanged: (value) {
+              setState(() {
+                _currentWeight = value;
+                print(_currentWeight);
+              });
+            },
           ),
         ),
 
@@ -138,7 +140,7 @@ class _HomeState extends State<Home> {
             child: Stack(
           children: <Widget>[
             FutureBuilder<CameraPosition>(
-              future: _cameraPositionFurure,
+              future: _cameraPositionFuture,
               builder: (constext, snapshot) {
                 if (snapshot.hasData) {
                   return GoogleMap(

@@ -126,6 +126,7 @@ class _TransportDetailState extends State<TransportDetail> {
 
     final  Map<String, Object> arguments = ModalRoute.of(context).settings.arguments;
     print(arguments);
+    int weight = arguments["weight"];
     LatLng originLatLng = arguments["originPoint"];
     LatLng destinationLatLng = arguments["destinationPoint"];
     String originAddress = arguments["originAddress"];
@@ -238,6 +239,7 @@ class _TransportDetailState extends State<TransportDetail> {
                                   print(totalPrice);
                                   Navigator.of(context)
                                       .pushNamed(PaymentTMethodList.PATH, arguments: {
+                                        "weight" : weight,
                                         "originAddress": originAddress,
                                         "destinationAddress" : destinationAddress,
                                         "originPoint": originLatLng,
