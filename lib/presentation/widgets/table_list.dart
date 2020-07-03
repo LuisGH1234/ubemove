@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ubermove/domain/models/job.dart';
 
 class TableListView<T> extends StatefulWidget {
   final List<T> data;
@@ -58,7 +59,7 @@ class _TableListViewState<T> extends State<TableListView<T>> {
             child: Row(
               // mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                styledHeaderText("Nombre"),
+                styledHeaderText("Compañia"),
                 styledHeaderText("Fecha"),
                 styledHeaderText("Costo"),
               ],
@@ -66,37 +67,13 @@ class _TableListViewState<T> extends State<TableListView<T>> {
           ),
           Flexible(
             child: ListView.builder(
+              shrinkWrap: true,
               padding: EdgeInsets.all(0),
               itemCount: widget.data.length,
               itemBuilder: (context, index) {
+                final job = widget.data[index] as Job;
                 return GestureDetector(
                   behavior: HitTestBehavior.translucent,
-                  // onVerticalDragStart: (detail) {
-                  //   setState(() {
-                  //     indexPressed = -1;
-                  //   });
-                  // },
-                  // onHorizontalDragEnd: (DragEndDetails detail) {
-                  //   setState(() {
-                  //     indexPressed = -1;
-                  //   });
-                  // },
-                  // onTapDown: (TapDownDetails details) {
-                  //   setState(() {
-                  //     indexPressed = index;
-                  //   });
-                  // },
-                  // onTapUp: (details) {
-                  //   setState(() {
-                  //     indexPressed = -1;
-                  //   });
-                  // },
-                  // onTap: () {
-                  //   setState(() {
-                  //     indexPressed = -1;
-                  //   });
-                  //   // print('taped: $index');
-                  // },
                   child: Container(
                     color: index != indexPressed
                         ? Color(0xffEDF1F7)
@@ -105,9 +82,9 @@ class _TableListViewState<T> extends State<TableListView<T>> {
                     child: Row(
                       // mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
-                        styledText("0001"),
-                        styledText("10-02-2020"),
-                        styledText("s/200"),
+                        styledText(job.company.businessName),
+                        styledText(job.date.toString()),
+                        styledText(job.payment.quantity.toString()),
                       ],
                     ),
                   ),

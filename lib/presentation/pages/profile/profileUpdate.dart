@@ -22,7 +22,7 @@ class ProfileUpdate extends StatelessWidget {
 
   Future commitUpdates(BuildContext context, String names, lastnames, phone, address) async {
     final prefs = await SharedPreferences.getInstance();
-    var userID = await prefs.getInt('userID');
+    var userID = prefs.getInt('userID');
 
     final path = "$USER_PATH/updateprofile";
     final data = {"id": userID,'firstName': _names, 'lastName': _lastnames, 'phone': _phone};
