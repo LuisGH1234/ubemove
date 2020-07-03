@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:ubermove/domain/models/job.dart';
 
 class TableListView<T> extends StatefulWidget {
@@ -83,7 +84,7 @@ class _TableListViewState<T> extends State<TableListView<T>> {
                       // mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
                         styledText(job.company.businessName),
-                        styledText(job.date.toString()),
+                        styledText(DateFormat('dd-MM-yyyy').format(job.date)),
                         styledText(job.payment.quantity.toString()),
                       ],
                     ),

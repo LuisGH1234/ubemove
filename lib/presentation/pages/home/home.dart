@@ -1,14 +1,14 @@
 import 'dart:async';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ubermove/presentation/blocs/user/bloc.dart';
+import 'package:ubermove/presentation/blocs/user/state.dart';
 import 'package:ubermove/presentation/pages/home/specifyDestination.dart';
-import 'package:ubermove/presentation/pages/home/transportDetail.dart';
 import 'package:ubermove/presentation/widgets/button.dart';
 import 'package:ubermove/presentation/widgets/date_picker.dart';
 import 'package:ubermove/presentation/widgets/input.dart';
 import 'package:geolocator/geolocator.dart';
-
 
 class Home extends StatefulWidget {
   @override
@@ -19,19 +19,30 @@ class _HomeState extends State<Home> {
   Completer<GoogleMapController> _controller = Completer();
   Position _currentPosition;
   String _permissionStatus;
-  Future<CameraPosition> _cameraPositionFurure;
+
+  Future<CameraPosition> _cameraPositionFuture;
+  String _currentWeight = "";
+  DateTime date = DateTime(2020);
+  TimeOfDay time = TimeOfDay(hour: 0, minute: 0);
+
   // final LatLng _center = const LatLng(-12.0749822, -77.0449321);
 
   @override
   void initState() {
     super.initState();
-    _cameraPositionFurure = setCameraPosition();
+    _cameraPositionFuture = setCameraPosition();
     // streamController = StreamController.broadcast();
   }
 
   Future navigateToSpecifyDestination(context) async {
+    DateTime dateTime =
+        DateTime(date.year, date.month, date.day, time.hour, time.minute);
+    Navigator.pushNamed(context, SpecifyDestination.PATH, arguments: {
+      "originCameraPosition": _kGooglePlex,
+      "weight": int.parse(_currentWeight),
+      "date": dateTime
+    });
 
-    Navigator.pushNamed(context, SpecifyDestination.PATH, arguments: _kGooglePlex);
     //Navigator.push(context, MaterialPageRoute(builder: (context) => TransportDetail()));
   }
 
@@ -39,11 +50,6 @@ class _HomeState extends State<Home> {
     // if (await Permission.location.isUndetermined) {
     final Geolocator geolocator = Geolocator()
       ..forceAndroidLocationManager = true;
-    // final geolocationStatus = await getPermission(geolocator);
-    // print("Per: " + geolocationStatus.toString());
-    // if (geolocationStatus.value == GeolocationStatus.denied.value ||
-    //     geolocationStatus.value == GeolocationStatus.restricted.value)
-    //   throw Exception("No se aprobó los permisos de localozación");
 
     print("aaaaa1");
     final position = await geolocator.getCurrentPosition(
@@ -98,93 +104,123 @@ class _HomeState extends State<Home> {
     _controller.complete(controller);
   }
 
+  void showSnackbar(String message, int type) {
+    final snackbar = SnackBar(
+      content: Text(message ?? 'Error'),
+      backgroundColor: type == 0 ? Colors.redAccent : Colors.green,
+    );
+    Scaffold.of(context).showSnackBar(snackbar);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final userBloc = context.bloc<UserBloc>();
     // Future<CameraPosition> _cameraPositionFurure = setCameraPosition();
 
-    return Flex(
-      direction: Axis.vertical,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 30),
-          child: Text(
-            'Transporte',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    return BlocConsumer<UserBloc, UserState>(
+      listener: (context, state) {
+        if (state.createJobEvent.loading) return;
+        if (state.createJobEvent.success == true) {
+          showSnackbar("Se registro exitosamente la solicitud", 1);
+          userBloc.resetCreateJob();
+        }
+      },
+      builder: (context, state) => Flex(
+        direction: Axis.vertical,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30),
+            child: Text(
+              'Transporte',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          child: RangeDatePicker(
-            onSaveEndDate: (date) {},
-            onSaveSartDate: (date) {},
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 15),
-          child: RangeDatePicker(
-            onSaveEndDate: (date) {},
-            onSaveSartDate: (date) {},
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 15),
-          child: Input(
-            keyboardType: TextInputType.number,
-            hintText: "Peso de la carga",
-          ),
-        ),
-
-        Expanded(
-            child: Stack(
-          children: <Widget>[
-            FutureBuilder<CameraPosition>(
-              future: _cameraPositionFurure,
-              builder: (constext, snapshot) {
-                if (snapshot.hasData) {
-                  return GoogleMap(
-                    mapType: MapType.normal,
-                    initialCameraPosition: snapshot.data,
-                    // myLocationButtonEnabled: false,
-                    // zoomControlsEnabled: false,
-                    onMapCreated: (GoogleMapController controller) {
-                      _controller.complete(controller);
-                    },
-                    markers: Set<Marker>.of([
-                      Marker(
-                          markerId: MarkerId("dasss"),
-                          position: snapshot.data.target)
-                    ]),
-                    // onMapCreated: _onMapCreated,
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                        "No se puede mostrar el mapa porque faltan permisos"),
-                  );
-                }
-                return Center(child: CircularProgressIndicator());
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: RangeDatePicker(
+              time: time,
+              date: date,
+              onSaveTime: (selectedTime) {
+                setState(() {
+                  time = selectedTime;
+                });
+              },
+              onSaveDate: (selectedDate) {
+                setState(() {
+                  date = selectedDate;
+                });
               },
             ),
-            Positioned(
-              bottom: 0,
-              width: MediaQuery.of(context).size.width - 40,
-              child: Center(
-                child: Container(
-                  width: 200,
-                  padding: EdgeInsets.only(bottom: 20),
-                  child: Button(
-                    "CONTINUAR",
-                    onPressed: () {
-                      navigateToSpecifyDestination(context);
-                    },
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: Input(
+              keyboardType: TextInputType.number,
+              hintText: "Peso de la carga",
+              onChanged: (value) {
+                setState(() {
+                  _currentWeight = value;
+                  print(_currentWeight);
+                });
+              },
+            ),
+          ),
+          Expanded(
+              child: Stack(
+            children: <Widget>[
+              FutureBuilder<CameraPosition>(
+                future: _cameraPositionFuture,
+                builder: (constext, snapshot) {
+                  if (snapshot.hasData) {
+                    return GoogleMap(
+                      mapType: MapType.normal,
+                      initialCameraPosition: snapshot.data,
+                      // myLocationButtonEnabled: false,
+                      // zoomControlsEnabled: false,
+                      onMapCreated: (GoogleMapController controller) {
+                        _controller.complete(controller);
+                      },
+                      markers: Set<Marker>.of([
+                        Marker(
+                            markerId: MarkerId("dasss"),
+                            position: snapshot.data.target)
+                      ]),
+                      // onMapCreated: _onMapCreated,
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                          "No se puede mostrar el mapa porque faltan permisos"),
+                    );
+                  }
+                  return Center(child: CircularProgressIndicator());
+                },
+              ),
+              Positioned(
+                bottom: 0,
+                width: MediaQuery.of(context).size.width - 40,
+                child: Center(
+                  child: Container(
+                    width: 200,
+                    padding: EdgeInsets.only(bottom: 20),
+                    child: Button(
+                      "CONTINUAR",
+                      onPressed: () {
+                        final weightI = int.tryParse(_currentWeight);
+                        if (weightI == null || weightI * 1 == 0) {
+                          showSnackbar("El campo peso es obligatorio", 0);
+                        } else
+                          navigateToSpecifyDestination(context);
+                      },
+                    ),
                   ),
                 ),
-              ),
-            )
-          ],
-        )),
-        SizedBox(height: 20)
-      ],
+              )
+            ],
+          )),
+          SizedBox(height: 20)
+        ],
+      ),
     );
   }
 }

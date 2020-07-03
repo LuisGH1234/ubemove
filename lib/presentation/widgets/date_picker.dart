@@ -1,15 +1,21 @@
 import 'dart:io' show Platform;
+import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart'
     show showCupertinoModalPopup, CupertinoDatePicker, CupertinoDatePickerMode;
 import 'package:flutter/material.dart';
 import '../../common/constants/colors.dart';
 
 class RangeDatePicker extends StatelessWidget {
-  final void Function(DateTime) onSaveSartDate;
-  final void Function(DateTime) onSaveEndDate;
+  final DateTime date;
+  final TimeOfDay time;
+  final void Function(DateTime) onSaveDate;
+  final void Function(TimeOfDay) onSaveTime;
 
   RangeDatePicker(
-      {@required this.onSaveSartDate, @required this.onSaveEndDate});
+      {@required this.onSaveDate,
+      @required this.onSaveTime,
+      @required this.date,
+      @required this.time});
 
   Future<void> _selectAndroidDate(
       BuildContext context, void Function(DateTime) cb) async {
@@ -21,6 +27,15 @@ class RangeDatePicker extends StatelessWidget {
     );
     if (picked != null) {
       cb(DateTime(picked.year, picked.month, picked.day));
+    }
+  }
+
+  Future<void> _selectAndroidTime(
+      BuildContext context, void Function(TimeOfDay) cb) async {
+    final picked =
+        await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    if (picked != null) {
+      cb(picked);
     }
   }
 
@@ -65,9 +80,9 @@ class RangeDatePicker extends StatelessWidget {
         children: <Widget>[
           GestureDetector(
             // onTap: () {},
-            onTap: () => _select(context, this.onSaveSartDate),
+            onTap: () => _select(context, this.onSaveDate),
             child: Text(
-              "01/02/2020",
+              DateFormat('yyyy-MM-dd').format(date) ?? "seleccionar",
               style: TextStyle(color: $Colors.PLACEHOLDER),
             ),
           ),
@@ -77,15 +92,23 @@ class RangeDatePicker extends StatelessWidget {
           ),
           GestureDetector(
             // onTap: () {},
-            onTap: () => _select(context, this.onSaveEndDate),
+            onTap: () => _selectAndroidTime(context, this.onSaveTime),
             child: Text(
-              "10/02/2020",
+              "${time.hour}:${time.minute}" ?? "seleccionar",
               style: TextStyle(color: $Colors.PLACEHOLDER),
             ),
           ),
+          // GestureDetector(
+          //   // onTap: () {},
+          //   onTap: () => _select(context, this.onSaveEndDate),
+          //   child: Text(
+          //     DateFormat('yyyy-MM-dd').format(endDate) ?? "seleccionar",
+          //     style: TextStyle(color: $Colors.PLACEHOLDER),
+          //   ),
+          // ),
           Spacer(),
           Icon(
-            Icons.person,
+            Icons.calendar_today,
             color: $Colors.PRIMARY,
           ),
         ],

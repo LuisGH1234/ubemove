@@ -8,6 +8,7 @@ class User extends Entity {
   final String lastName;
   final bool active;
   final String password;
+  final String phone;
 
   User(
       {this.id,
@@ -15,8 +16,9 @@ class User extends Entity {
       this.firstName,
       this.lastName,
       this.active,
-      this.password})
-      : assert(email != null);
+      this.phone,
+      this.password});
+  // : assert(email != null);
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -26,6 +28,7 @@ class User extends Entity {
       lastName: json['lastName'],
       active: json['active'],
       password: json['password'],
+      phone: json['phone'],
     );
   }
 
@@ -36,6 +39,7 @@ class User extends Entity {
         "firstName": firstName,
         "lastName": lastName,
         "password": password,
+        "phone": phone,
       };
 
   @override

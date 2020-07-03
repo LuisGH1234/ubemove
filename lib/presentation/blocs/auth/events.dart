@@ -13,3 +13,4 @@ class AuthenticateEvent with BaseEvent {
 
 class LoginEvent = SinglePayload<User> with BaseEvent;
 class RegistroEvent = SinglePayload<User> with BaseEvent;
+class UserEvent = SinglePayload<User> with BaseEvent;

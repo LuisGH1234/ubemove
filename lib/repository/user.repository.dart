@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ubermove/domain/models/company.dart';
 import 'package:ubermove/domain/models/job.dart';
 import 'package:ubermove/domain/models/paymentMethod.dart';
+import 'package:ubermove/domain/models/user.dart';
 import '../network/core/api_manager.dart';
 import 'package:ubermove/network/services/user.dart' as userServices;
 import 'package:ubermove/network/services/company.dart' as companyServices;
@@ -37,5 +38,9 @@ class UserRepository {
     return List.from(response.payload['data'])
         .map((e) => Job.fromJson(e))
         .toList();
+  }
+
+  Future<void> updateMyProfile(User data) async {
+    return userServices.updateProfile(data);
   }
 }
