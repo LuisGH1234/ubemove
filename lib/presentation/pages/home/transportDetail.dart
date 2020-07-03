@@ -27,6 +27,7 @@ class TransportDetail extends StatefulWidget {
 }
 
 class _TransportDetailState extends State<TransportDetail> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   Completer<GoogleMapController> _controller = Completer();
 
   List<DropdownMenuItem<String>> _dropDownMenuItems;
@@ -95,19 +96,31 @@ class _TransportDetailState extends State<TransportDetail> {
     polylines[id] = polyline;
   }
 
-
   @override
   void initState() {
     context.bloc<UserBloc>().getMyCompanies();
     //_dropDownMenuItems = getDropDownMenuItems();
     //_currentCompany = _dropDownMenuItems[0].value;
     super.initState();
-
   }
 
+  void showSnackbarError(String message) {
+    final snackbar = SnackBar(
+      content: Text(message),
+      backgroundColor: $Colors.ACCENT_RED,
+    );
+    _scaffoldKey.currentState.showSnackBar(snackbar);
+  }
+
+  void changedDropDownItem(String selectedCompany) {
+    setState(() {
+      _currentCompany = selectedCompany;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+
     final  Map<String, Object> arguments = ModalRoute.of(context).settings.arguments;
     print(arguments);
     LatLng originLatLng = arguments["originPoint"];
@@ -122,7 +135,13 @@ class _TransportDetailState extends State<TransportDetail> {
       });
     }
 
+    // final Map<String, Object> arguments =
+    //     ModalRoute.of(context).settings.arguments;
+    // print(arguments);
+
+
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(title: Text('Transporte')),
       backgroundColor: $Colors.BACKGROUD,
       body: SafeArea(
@@ -130,7 +149,9 @@ class _TransportDetailState extends State<TransportDetail> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: BlocConsumer<UserBloc, UserState>(
             listener: (context, state) {
-
+              if (state.companyListEvent.loading == true) return;
+              if (state.companyListEvent.error == true)
+                showSnackbarError(state.companyListEvent.message);
             },
             builder: (context, state) {
               return Flex(
@@ -140,42 +161,51 @@ class _TransportDetailState extends State<TransportDetail> {
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     child: Text(
                       'Costo total',
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
+                      style: TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.normal),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 15),
                     child: Text(
                       'S/. 200.00',
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 15),
                     child: Text(
                       'Tiempo estimado',
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
+                      style: TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.normal),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 15),
                     child: Text(
                       '45 - 50 minutos',
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Padding(
                       padding: const EdgeInsets.only(bottom: 15),
                       child: DropdownButton(
                         value: _currentCompany,
-                        items: state.companyListEvent.data.map((e) =>
-                            DropdownMenuItem<String>(
-                              child: Text(e.businessName + "     " + e.fare.toString()),
-                        )).toList(),
-                        onChanged: state.companyListEvent.error || state.companyListEvent.loading ?
-                        null:  (selectedCompany) => setState(() {
-                          _currentCompany = selectedCompany;
-                        }),
+                        items: state.companyListEvent.data
+                            .map((e) => DropdownMenuItem<String>(
+                                  child: Text(e.businessName +
+                                      "     " +
+                                      e.fare.toString()),
+                                ))
+                            .toList(),
+                        onChanged: state.companyListEvent.error ||
+                                state.companyListEvent.loading
+                            ? null
+                            : (selectedCompany) => setState(() {
+                                  _currentCompany = selectedCompany;
+                                }),
                       )),
                   Expanded(
                     child: Stack(

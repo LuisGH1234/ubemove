@@ -72,17 +72,16 @@ class AuthBloc extends BaseBloc<AuthState> {
      */
     switch (event.runtimeType) {
       case AuthenticateEvent:
-        yield AuthState(authEvent: event, loginEvent: state.loginEvent);
+        yield AuthState.from(state, authEvent: event);
         break;
       case LoginEvent:
-        yield AuthState(authEvent: state.authEvent, loginEvent: event)
+        yield AuthState.from(state,
+            loginEvent: event, user: (event as LoginEvent).value)
           ..isAuthenticated = !event.error && !event.loading;
         break;
       case RegistroEvent:
-        yield AuthState(
-            authEvent: state.authEvent,
-            registroEvent: event,
-            loginEvent: state.loginEvent)
+        yield AuthState.from(state,
+            registroEvent: event, user: (event as RegistroEvent).value)
           ..isAuthenticated = !event.error && !event.loading;
         break;
       default:
