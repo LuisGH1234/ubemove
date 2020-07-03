@@ -208,7 +208,7 @@ class _TransportDetailState extends State<TransportDetail> {
                             ? null
                             : (Company selectedCompany) => setState(() {
                           _currentCompany = selectedCompany;
-                          totalPrice = selectedCompany.fare * 35;
+                          totalPrice = (selectedCompany.fare * weight * 0.7) as int;
                           print(_currentCompany.businessName);
                         }),
                       )),
