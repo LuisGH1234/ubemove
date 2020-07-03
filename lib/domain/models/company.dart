@@ -12,35 +12,34 @@ class Company extends Entity {
 
   Company(
       {this.id,
-        this.businessName,
-        this.ruc,
-        this.email,
-        this.active,
-        this.fare,
-        this.rate})
+      this.businessName,
+      this.ruc,
+      this.email,
+      this.active,
+      this.fare,
+      this.rate})
       : assert(id != null);
 
   factory Company.fromJson(Map<String, dynamic> json) {
     return Company(
-      id: json['id'],
-      businessName: json['businessName'],
-      ruc: json['ruc'],
-      email: json['email'],
-      active: json['active'],
-      fare: json['fare'],
-      rate: json['rate']
-    );
+        id: json['id'],
+        businessName: json['businessName'],
+        ruc: json['ruc'],
+        email: json['email'],
+        active: json['active'],
+        fare: json['fare'],
+        rate: json['rate']);
   }
 
   @override
   Map<String, dynamic> convertirJson() => {
-    "businessName": businessName,
-    "ruc": ruc,
-    "lastName": email,
-    "active": active,
-    "fare": fare,
-    "rate": rate
-  };
+        "businessName": businessName,
+        "ruc": ruc,
+        "lastName": email,
+        "active": active,
+        "fare": fare,
+        "rate": rate
+      };
 
   @override
   List<Object> get props => [id, businessName, ruc, email, active, fare, rate];

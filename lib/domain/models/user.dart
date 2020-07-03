@@ -31,6 +31,7 @@ class User extends Entity {
 
   @override
   Map<String, dynamic> convertirJson() => {
+        "id": id,
         "email": email,
         "firstName": firstName,
         "lastName": lastName,

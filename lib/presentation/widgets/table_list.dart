@@ -58,7 +58,7 @@ class _TableListViewState<T> extends State<TableListView<T>> {
             child: Row(
               // mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                styledHeaderText("Nombre"),
+                styledHeaderText("Compañia"),
                 styledHeaderText("Fecha"),
                 styledHeaderText("Costo"),
               ],
@@ -71,32 +71,6 @@ class _TableListViewState<T> extends State<TableListView<T>> {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   behavior: HitTestBehavior.translucent,
-                  // onVerticalDragStart: (detail) {
-                  //   setState(() {
-                  //     indexPressed = -1;
-                  //   });
-                  // },
-                  // onHorizontalDragEnd: (DragEndDetails detail) {
-                  //   setState(() {
-                  //     indexPressed = -1;
-                  //   });
-                  // },
-                  // onTapDown: (TapDownDetails details) {
-                  //   setState(() {
-                  //     indexPressed = index;
-                  //   });
-                  // },
-                  // onTapUp: (details) {
-                  //   setState(() {
-                  //     indexPressed = -1;
-                  //   });
-                  // },
-                  // onTap: () {
-                  //   setState(() {
-                  //     indexPressed = -1;
-                  //   });
-                  //   // print('taped: $index');
-                  // },
                   child: Container(
                     color: index != indexPressed
                         ? Color(0xffEDF1F7)
