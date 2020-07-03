@@ -80,6 +80,7 @@ class _TableListViewState<T> extends State<TableListView<T>> {
                   if (widget.onRefresh != null) await widget.onRefresh();
                 },
                 child: ListView.builder(
+                  physics: AlwaysScrollableScrollPhysics(),
                   shrinkWrap: true,
                   padding: EdgeInsets.all(0),
                   itemCount: widget.data.length,
