@@ -9,7 +9,7 @@ class JobRepository {
     return JobRepository._();
   }
 
-  Future<List<dynamic>> geMyRequestedJobs(Job job) async {
+  Future<List<dynamic>> creatJobRequested(Job job) async {
     final response = await jobServices.creatJobRequested(job);
     return List.from(response.payload['data'])
         .map((e) => Job.fromJson(e))

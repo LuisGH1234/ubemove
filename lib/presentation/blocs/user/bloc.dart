@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ubermove/domain/models/job.dart';
 import 'package:ubermove/domain/models/paymentMethod.dart';
 import 'package:ubermove/presentation/blocs/core/base_bloc.dart';
 import 'package:ubermove/presentation/blocs/user/state.dart';
@@ -30,6 +31,16 @@ class UserBloc extends BaseBloc<UserState> {
     }
   }
 
+  void createJob(Job job) async {
+    addLoading(CreateJobEvent());
+    try {
+      await jobRepository.creatJobRequested(job);
+      addSuccess(CreateJobEvent(success: true));
+    } on Exception catch (ex) {
+      addError(CreateJobEvent(), ex.toString());
+    }
+  }
+
   @override
   UserState get initialState => UserState.init();
 
@@ -41,6 +52,9 @@ class UserBloc extends BaseBloc<UserState> {
         break;
       case JobListEvent:
         yield UserState.from(state, jobListEvent: event);
+        break;
+      case CreateJobEvent:
+        yield UserState.from(state, createJobEvent: event);
         break;
       default:
         print("UserBloc: mapEventToState default on switch statement");
