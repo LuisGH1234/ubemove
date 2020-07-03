@@ -45,9 +45,10 @@ class _HistoryState extends State<History> {
         }
       },
       builder: (context, state) {
-        if (state.jobListEvent.loading) {
-          return Center(child: CircularProgressIndicator());
-        } else if (state.jobListEvent.error == true) {
+        // if (state.jobListEvent.loading) {
+        //   return Center(child: CircularProgressIndicator());
+        // } else
+        if (state.jobListEvent.error == true) {
           return Center(
             child: Text(
                 "Lo sentimos ocurrio un problema: ${state.jobListEvent.message}"),
@@ -67,50 +68,52 @@ class _HistoryState extends State<History> {
                 visible: false,
                 child: Container(
                   height: 48.0,
-                  padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 14.0),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 15.0, vertical: 14.0),
                   decoration: BoxDecoration(
-                      color: Color(0xffF7F9FC), borderRadius: BorderRadius.circular(4)),
+                      color: Color(0xffF7F9FC),
+                      borderRadius: BorderRadius.circular(4)),
                   width: MediaQuery.of(context).size.width - 20,
-                    child: DropdownButton<String>(
-
-                      value: dropdownValue,
-                      icon: Transform.rotate(
-                        angle: -50 * pi / 100,
-                        child: Icon(Icons.chevron_left),
-                      ),
-                      // iconEnabledColor: $Colors.PRIMARY,
-                      isExpanded: true,
-                      iconSize: 28,
-                      elevation: 0,
-                      style: TextStyle(color: Color(0xff8F9BB3)),
-                      underline: Container(height: 0),
-                      iconDisabledColor: Colors.grey,
-                      disabledHint: Text(
-                        "últimos 30 días",
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      // onChanged: null,
-                      onChanged: (String newValue) {
-                        setState(() {
-                          dropdownValue = newValue;
-                        });
-                      },
-                      items: <String>['One', 'Two', 'Free', 'Four']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
+                  child: DropdownButton<String>(
+                    value: dropdownValue,
+                    icon: Transform.rotate(
+                      angle: -50 * pi / 100,
+                      child: Icon(Icons.chevron_left),
                     ),
-              )
-
-            ),
+                    // iconEnabledColor: $Colors.PRIMARY,
+                    isExpanded: true,
+                    iconSize: 28,
+                    elevation: 0,
+                    style: TextStyle(color: Color(0xff8F9BB3)),
+                    underline: Container(height: 0),
+                    iconDisabledColor: Colors.grey,
+                    disabledHint: Text(
+                      "últimos 30 días",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    // onChanged: null,
+                    onChanged: (String newValue) {
+                      setState(() {
+                        dropdownValue = newValue;
+                      });
+                    },
+                    items: <String>['One', 'Two', 'Free', 'Four']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                )),
             Expanded(
               child: TableListView(
+                  loading: state.jobListEvent.loading,
+                  onRefresh: () async {
+                    context.bloc<UserBloc>().getMyJobRecord();
+                  },
                   margin: EdgeInsetsDirectional.only(top: 21, bottom: 15),
-                  data: state.jobListEvent.data
-              ),
+                  data: state.jobListEvent.data),
             )
           ],
         );
