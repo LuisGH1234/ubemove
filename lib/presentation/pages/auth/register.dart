@@ -32,7 +32,6 @@ class _RegisterState extends State<Register> {
       content: Text(message ?? 'Error'),
       backgroundColor: $Colors.ACCENT_RED,
     );
-    print('Holi');
     _scaffoldKey.currentState.showSnackBar(snackbar);
   }
 

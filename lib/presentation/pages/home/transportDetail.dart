@@ -1,24 +1,16 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/src/response.dart';
 import 'package:ubermove/common/constants/colors.dart';
 import 'package:ubermove/domain/models/company.dart';
-import 'package:ubermove/network/core/api_manager.dart';
 import 'package:ubermove/presentation/blocs/user/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ubermove/presentation/blocs/user/state.dart';
 import 'package:ubermove/presentation/pages/home/paymentMethod.dart';
-import 'package:ubermove/presentation/pages/home/specifyDestination.dart';
 import 'package:ubermove/presentation/widgets/button.dart';
-import 'package:ubermove/presentation/widgets/date_picker.dart';
-import 'package:ubermove/presentation/widgets/input.dart';
-
-import '../main_page.dart';
 
 class TransportDetail extends StatefulWidget {
   static const PATH = "/transportDetail";
@@ -123,8 +115,8 @@ class _TransportDetailState extends State<TransportDetail> {
 
   @override
   Widget build(BuildContext context) {
-
-    final  Map<String, Object> arguments = ModalRoute.of(context).settings.arguments;
+    final Map<String, Object> arguments =
+        ModalRoute.of(context).settings.arguments;
     print(arguments);
     DateTime date = arguments["date"];
     int weight = arguments["weight"];
@@ -132,14 +124,16 @@ class _TransportDetailState extends State<TransportDetail> {
     LatLng destinationLatLng = arguments["destinationPoint"];
     String originAddress = arguments["originAddress"];
     String destinationAddress = arguments["destinationAddress"];
-    final Position start = Position(latitude: originLatLng.latitude , longitude : originLatLng.longitude);
-    final Position destination = Position(latitude: destinationLatLng.latitude , longitude : destinationLatLng.longitude);
+    final Position start = Position(
+        latitude: originLatLng.latitude, longitude: originLatLng.longitude);
+    final Position destination = Position(
+        latitude: destinationLatLng.latitude,
+        longitude: destinationLatLng.longitude);
     _createPolylines(start, destination);
 
     // final Map<String, Object> arguments =
     //     ModalRoute.of(context).settings.arguments;
     // print(arguments);
-
 
     return Scaffold(
       key: _scaffoldKey,
@@ -171,7 +165,7 @@ class _TransportDetailState extends State<TransportDetail> {
                     child: Text(
                       'S/. $totalPrice',
                       style:
-                      TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Padding(
@@ -193,20 +187,24 @@ class _TransportDetailState extends State<TransportDetail> {
                   Padding(
                       padding: const EdgeInsets.only(bottom: 15),
                       child: DropdownButton(
-                        hint: Text('Escoja la compañia'),
+                        hint: Text(
+                          'Escoja la compañia',
+                          style: TextStyle(color: Colors.black),
+                        ),
                         value: _currentCompany,
                         items: state.companyListEvent.data
                             .map((e) => DropdownMenuItem<Company>(
-                          child: Text(e.businessName +
-                              "     " +
-                              e.fare.toString()),
-                          value: e,
-                        ))
+                                  child: Text(e.businessName +
+                                      "     " +
+                                      e.fare.toString()),
+                                  value: e,
+                                ))
                             .toList(),
                         onChanged: state.companyListEvent.error ||
-                            state.companyListEvent.loading
+                                state.companyListEvent.loading
                             ? null
                             : (Company selectedCompany) => setState(() {
+
                           _currentCompany = selectedCompany;
                           totalPrice = (selectedCompany.fare * weight * 0.7) as int;
                           print(_currentCompany.businessName);
@@ -234,21 +232,28 @@ class _TransportDetailState extends State<TransportDetail> {
                               child: Button(
                                 "CONTINUAR",
                                 onPressed: () {
+                                  if (_currentCompany == null) {
+                                    showSnackbarError(
+                                        "Es obligatorio seleccionar una compañia");
+                                    return;
+                                  }
                                   print(arguments["originAddress"]);
                                   print(arguments["destinationAddress"]);
                                   print(arguments["originPoint"]);
                                   print(totalPrice);
-                                  Navigator.of(context)
-                                      .pushNamed(PaymentTMethodList.PATH, arguments: {
-                                        "date" : date,
-                                        "weight" : weight,
+                                  Navigator.of(context).pushNamed(
+                                      PaymentTMethodList.PATH,
+                                      arguments: {
+                                        "date": date,
+                                        "weight": weight,
                                         "originAddress": originAddress,
-                                        "destinationAddress" : destinationAddress,
+                                        "destinationAddress":
+                                            destinationAddress,
                                         "originPoint": originLatLng,
                                         "destinationPoint": destinationLatLng,
                                         "company": _currentCompany,
-                                        "totalPrice" : totalPrice,
-                                  });
+                                        "totalPrice": totalPrice,
+                                      });
                                 },
                               ),
                             ),

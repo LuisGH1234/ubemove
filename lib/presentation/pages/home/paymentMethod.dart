@@ -44,8 +44,8 @@ class _PaymentTMethodListState extends State<PaymentTMethodList> {
 
   @override
   Widget build(BuildContext context) {
-
-    final  Map<String, Object> arguments = ModalRoute.of(context).settings.arguments;
+    final Map<String, Object> arguments =
+        ModalRoute.of(context).settings.arguments;
 
     DateTime date = arguments["date"];
     int weight = arguments["weight"];
@@ -105,12 +105,26 @@ class _PaymentTMethodListState extends State<PaymentTMethodList> {
                     ),
                   ),
                   Button("Continuar", onPressed: () {
-                    Job job = Job(weight: weight, date: date, originAddress: originAddress,
-                        destinyAddress: destinationAddress, originLatitude: originLatLng.latitude, originLongitude: originLatLng.longitude,
-                        destinyLatitude: destinationLatLng.latitude, destinyLongitude: destinationLatLng.longitude,
-                        company: company, totalPrice: totalPrice, paymentMethodClient: PaymentMethodClient(id: _currentPaymentMethod.id),
-                        status: 0, user: _user
-                        );
+                    if (_pmID == null || _pmID == 0) {
+                      showSnackbarError(
+                          "Es obligatorio seleccionar un método de pago");
+                      return;
+                    }
+                    Job job = Job(
+                        weight: weight,
+                        date: date,
+                        originAddress: originAddress,
+                        destinyAddress: destinationAddress,
+                        originLatitude: originLatLng.latitude,
+                        originLongitude: originLatLng.longitude,
+                        destinyLatitude: destinationLatLng.latitude,
+                        destinyLongitude: destinationLatLng.longitude,
+                        company: company,
+                        totalPrice: totalPrice,
+                        paymentMethodClient:
+                            PaymentMethodClient(id: _currentPaymentMethod.id),
+                        status: 0,
+                        user: _user);
                     context.bloc<UserBloc>().createJob(job);
                     Navigator.popUntil(context, ModalRoute.withName('/'));
                   }),
