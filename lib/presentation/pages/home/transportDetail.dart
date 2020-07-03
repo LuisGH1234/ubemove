@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'dart:math';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -206,7 +207,7 @@ class _TransportDetailState extends State<TransportDetail> {
                             : (Company selectedCompany) => setState(() {
 
                           _currentCompany = selectedCompany;
-                          totalPrice = (selectedCompany.fare * weight * 0.7) as int;
+                          totalPrice = (selectedCompany.fare * weight * 0.7).round() ;
                           print(_currentCompany.businessName);
                         }),
                       )),
